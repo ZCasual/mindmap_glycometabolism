@@ -70,7 +70,23 @@
                 { id: "Succinate", label: "琥珀酸", group: "TCA" },
                 { id: "Fumarate", label: "延胡索酸", group: "TCA" },
                 { id: "Malate", label: "苹果酸", group: "TCA" },
-                { id: "OAA", label: "草酰乙酸", group: "TCA" }
+                { id: "OAA", label: "草酰乙酸", group: "TCA" },
+                { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "EMP" },
+                { id: "Fructose-6-Phosphate", label: "果糖-6-磷酸", group: "EMP" },
+                { id: "Fructose-1,6-bisphosphate", label: "果糖-1,6-二磷酸", group: "EMP" },
+                { id: "Glyceraldehyde-3-Phosphate", label: "甘油醛-3-磷酸", group: "EMP" },
+                { id: "Dihydroxyacetone Phosphate", label: "二羟基丙酮磷酸", group: "EMP" },
+                { id: "1,3-Bisphosphoglycerate", label: "1,3-二磷酸甘油酸", group: "EMP" },
+                { id: "3-Phosphoglycerate", label: "3-磷酸甘油酸", group: "EMP" },
+                { id: "2-Phosphoglycerate", label: "2-磷酸甘油酸", group: "EMP" },
+                { id: "Phosphoenolpyruvate", label: "磷酸烯醇式丙酮酸", group: "EMP" },
+                { id: "Pyruvate", label: "丙酮酸", group: "EMP" },
+                { id: "6-Phosphoglucono-δ-lactone", label: "6-磷酸葡糖酸内酯", group: "PPP" },
+                { id: "6-Phosphogluconate", label: "6-磷酸葡糖酸", group: "PPP" },
+                { id: "Ribulose-5-Phosphate", label: "核酮糖-5-磷酸", group: "PPP" },
+                { id: "Ribose-5-Phosphate", label: "核糖-5-磷酸", group: "PPP" },
+                { id: "Erythrose-4-Phosphate", label: "赤藓糖-4-磷酸", group: "PPP" },
+                { id: "Sedoheptulose-7-Phosphate", label: "景天庚酮糖-7-磷酸", group: "PPP" }
             ],
             links: [
                 { source: "Glucose", target: "EMP", double: false },
@@ -87,7 +103,27 @@
                 { source: "SuccinylCoA", target: "Succinate", double: false },
                 { source: "Succinate", target: "Fumarate", double: true },
                 { source: "Fumarate", target: "Malate", double: true },
-                { source: "Malate", target: "OAA", double: true }
+                { source: "Malate", target: "OAA", double: true },
+                { source: "Glucose", target: "Glucose-6-Phosphate", double: false },
+                { source: "Glucose-6-Phosphate", target: "Fructose-6-Phosphate", double: true },
+                { source: "Fructose-6-Phosphate", target: "Fructose-1,6-bisphosphate", double: false },
+                { source: "Fructose-1,6-bisphosphate", target: "Glyceraldehyde-3-Phosphate", double: true },
+                { source: "Fructose-1,6-bisphosphate", target: "Dihydroxyacetone Phosphate", double: true },
+                { source: "Dihydroxyacetone Phosphate", target: "Glyceraldehyde-3-Phosphate", double: true },
+                { source: "Glyceraldehyde-3-Phosphate", target: "1,3-Bisphosphoglycerate", double: true },
+                { source: "1,3-Bisphosphoglycerate", target: "3-Phosphoglycerate", double: true },
+                { source: "3-Phosphoglycerate", target: "2-Phosphoglycerate", double: true },
+                { source: "2-Phosphoglycerate", target: "Phosphoenolpyruvate", double: true },
+                { source: "Phosphoenolpyruvate", target: "Pyruvate", double: false },
+                { source: "Glucose-6-Phosphate", target: "6-Phosphoglucono-δ-lactone", double: false },
+                { source: "6-Phosphoglucono-δ-lactone", target: "6-Phosphogluconate", double: false },
+                { source: "6-Phosphogluconate", target: "Ribulose-5-Phosphate", double: false },
+                { source: "Ribulose-5-Phosphate", target: "Ribose-5-Phosphate", double: true },
+                { source: "Ribulose-5-Phosphate", target: "Erythrose-4-Phosphate", double: true },
+                { source: "Ribose-5-Phosphate", target: "Fructose-6-Phosphate", double: true },
+                { source: "Erythrose-4-Phosphate", target: "Fructose-6-Phosphate", double: true },
+                { source: "Erythrose-4-Phosphate", target: "Sedoheptulose-7-Phosphate", double: true },
+                { source: "Sedoheptulose-7-Phosphate", target: "Fructose-6-Phosphate", double: true }
             ]
         };
 
@@ -183,6 +219,72 @@
                 return "";
             });
 
+        // 添加关键酶和产物信息
+        const empLinkLabels = g.append("g")
+            .selectAll("text")
+            .data(data.links)
+            .join("text")
+            .attr("class", "link-label")
+            .attr("text-anchor", "middle")
+            .attr("dy", -5)
+            .style("fill", "#FFFFFF")
+            .text(d => {
+                if (d.source === "Glucose" && d.target === "Glucose-6-Phosphate") {
+                    return "[己糖激酶, ATP -> ADP]";
+                } else if (d.source === "Glucose-6-Phosphate" && d.target === "Fructose-6-Phosphate") {
+                    return "[磷酸己糖异构酶]";
+                } else if (d.source === "Fructose-6-Phosphate" && d.target === "Fructose-1,6-bisphosphate") {
+                    return "[磷酸果糖激酶-1, ATP -> ADP]";
+                } else if (d.source === "Fructose-1,6-bisphosphate" && d.target === "Glyceraldehyde-3-Phosphate") {
+                    return "[醛缩酶]";
+                } else if (d.source === "Dihydroxyacetone Phosphate" && d.target === "Glyceraldehyde-3-Phosphate") {
+                    return "[磷酸三糖异构酶]";
+                } else if (d.source === "Glyceraldehyde-3-Phosphate" && d.target === "1,3-Bisphosphoglycerate") {
+                    return "[甘油醛-3-磷酸脱氢酶, NAD⁺ -> NADH+H⁺]";
+                } else if (d.source === "1,3-Bisphosphoglycerate" && d.target === "3-Phosphoglycerate") {
+                    return "[磷酸甘油酸激酶, ADP -> ATP]";
+                } else if (d.source === "3-Phosphoglycerate" && d.target === "2-Phosphoglycerate") {
+                    return "[磷酸甘油酸变位酶]";
+                } else if (d.source === "2-Phosphoglycerate" && d.target === "Phosphoenolpyruvate") {
+                    return "[烯醇化酶]";
+                } else if (d.source === "Phosphoenolpyruvate" && d.target === "Pyruvate") {
+                    return "[丙酮酸激酶, ADP -> ATP]";
+                }
+                return "";
+            });
+
+        // 添加关键酶和产物信息
+        const pppLinkLabels = g.append("g")
+            .selectAll("text")
+            .data(data.links)
+            .join("text")
+            .attr("class", "link-label")
+            .attr("text-anchor", "middle")
+            .attr("dy", -5)
+            .style("fill", "#FFFFFF")
+            .text(d => {
+                if (d.source === "Glucose-6-Phosphate" && d.target === "6-Phosphoglucono-δ-lactone") {
+                    return "[葡萄糖-6-磷酸脱氢酶, NADP⁺ -> NADPH+H⁺]";
+                } else if (d.source === "6-Phosphoglucono-δ-lactone" && d.target === "6-Phosphogluconate") {
+                    return "[6-磷酸葡糖酸内酯酶]";
+                } else if (d.source === "6-Phosphogluconate" && d.target === "Ribulose-5-Phosphate") {
+                    return "[6-磷酸葡糖酸脱氢酶, NADP⁺ -> NADPH+CO₂]";
+                } else if (d.source === "Ribulose-5-Phosphate" && d.target === "Ribose-5-Phosphate") {
+                    return "[磷酸戊糖异构酶]";
+                } else if (d.source === "Ribulose-5-Phosphate" && d.target === "Erythrose-4-Phosphate") {
+                    return "[转酮醇酶]";
+                } else if (d.source === "Ribose-5-Phosphate" && d.target === "Fructose-6-Phosphate") {
+                    return "[转醛醇酶]";
+                } else if (d.source === "Erythrose-4-Phosphate" && d.target === "Fructose-6-Phosphate") {
+                    return "[转醛醇酶]";
+                } else if (d.source === "Erythrose-4-Phosphate" && d.target === "Sedoheptulose-7-Phosphate") {
+                    return "[转酮醇酶]";
+                } else if (d.source === "Sedoheptulose-7-Phosphate" && d.target === "Fructose-6-Phosphate") {
+                    return "[转醛醇酶]";
+                }
+                return "";
+            });
+
         // 创建节点
         const node = g.append("g")
             .selectAll(".node")
@@ -272,6 +374,14 @@
             // 更新关键酶和产物信息的位置
             linkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
                       .attr("y", d => (d.source.y + d.target.y) / 2);
+
+            // 更新EMP途径的连接线标签位置
+            empLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
+                         .attr("y", d => (d.source.y + d.target.y) / 2);
+
+            // 更新PPP途径的连接线标签��置
+            pppLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
+                         .attr("y", d => (d.source.y + d.target.y) / 2);
         });
 
         // 拖拽函数
