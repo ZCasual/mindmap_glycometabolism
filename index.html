@@ -55,7 +55,7 @@
     <script>
         const data = {
             nodes: [
-                { id: "Glucose", label: "葡萄糖", group: "Glucose" },
+                { id: "Glucose", label: "葡萄糖", group: "Glycogenesis" },
                 { id: "Glycogenesis", label: "Glycogenesis", group: "Glycogenesis" },
                 { id: "EMP", label: "EMP", group: "EMP" },
                 { id: "PPP", label: "PPP", group: "PPP" },
@@ -72,7 +72,7 @@
                 { id: "Fumarate", label: "延胡索酸", group: "TCA" },
                 { id: "Malate", label: "苹果酸", group: "TCA" },
                 { id: "OAA", label: "草酰乙酸", group: "TCA" },
-                { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "EMP" },
+                { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "Glycogenesis" },
                 { id: "Fructose-6-Phosphate", label: "果糖-6-磷酸", group: "EMP" },
                 { id: "Fructose-1,6-bisphosphate", label: "果糖-1,6-二磷酸", group: "EMP" },
                 { id: "Glyceraldehyde-3-Phosphate", label: "甘油醛-3-磷酸", group: "EMP" },
@@ -91,11 +91,11 @@
                 { id: "OxaloacetateCyt", label: "胞质草酰乙酸", group: "GNG" },
                 { id: "PEPCyt", label: "胞质磷酸烯醇式丙酮酸", group: "GNG" },
                 { id: "PyruvateCyt", label: "胞质丙酮酸", group: "GNG" },
-                { id: "Glucose1P", label: "葡萄糖-1-磷酸", group: "GS" },
-                { id: "UDPGlucose", label: "UDP-葡萄糖", group: "GS" },
-                { id: "Glycogen", label: "糖原", group: "GS" },
-                { id: "LinearGlycogen", label: "线性糖原", group: "GS" },
-                { id: "BranchedGlycogen", label: "分支糖原", group: "GS" }
+                { id: "Glucose1P", label: "葡萄糖-1-磷酸", group: "Glycogenesis" },
+                { id: "UDPGlucose", label: "UDP-葡萄糖", group: "Glycogenesis" },
+                { id: "LinearGlycogen", label: "线性糖原", group: "Glycogenesis" },
+                { id: "BranchedGlycogen", label: "分支糖原", group: "Glycogenesis" },
+                { id: "Glycogen", label: "糖原", group: "Glycogenesis" }
             ],
             links: [
                 { source: "GS", target: "EMP", double: false },
@@ -142,7 +142,8 @@
                 { source: "Glucose1P", target: "UDPGlucose", double: false },
                 { source: "UDPGlucose", target: "LinearGlycogen", double: false },
                 { source: "LinearGlycogen", target: "BranchedGlycogen", double: true },
-                { source: "BranchedGlycogen", target: "Glycogen", double: false }
+                { source: "BranchedGlycogen", target: "Glycogen", double: false },
+                { source: "Pyruvate", target: "AcetylCoA", double: false }
             ]
         };
 
@@ -268,6 +269,8 @@
                     return "[烯醇化酶]";
                 } else if (d.source === "Phosphoenolpyruvate" && d.target === "Pyruvate") {
                     return "[丙酮酸激酶, ADP -> ATP]";
+                } else if (d.source === "Pyruvate" && d.target === "AcetylCoA") {
+                    return "[丙酮酸脱氢酶复合体, NAD⁺ -> NADH+H⁺, CoA-SH -> CO₂]";
                 }
                 return "";
             });
@@ -295,7 +298,7 @@
                 } else if (d.source === "Ribose-5-Phosphate" && d.target === "Fructose-6-Phosphate") {
                     return "[转醛醇酶]";
                 } else if (d.source === "Erythrose-4-Phosphate" && d.target === "Fructose-6-Phosphate") {
-                    return "[转醛醇酶]";
+                    return "[转醛酶]";
                 } else if (d.source === "Erythrose-4-Phosphate" && d.target === "Sedoheptulose-7-Phosphate") {
                     return "[转酮醇酶]";
                 } else if (d.source === "Sedoheptulose-7-Phosphate" && d.target === "Fructose-6-Phosphate") {
@@ -305,7 +308,7 @@
             });
 
         // 添加关键酶和产物信息
-        const gngLinkLabels = g.append("g")
+        const glycogenesisLinkLabels = g.append("g")
             .selectAll("text")
             .data(data.links)
             .join("text")
@@ -314,14 +317,16 @@
             .attr("dy", -5)
             .style("fill", "#FFFFFF")
             .text(d => {
-                if (d.source === "PyruvateCyt" && d.target === "OxaloacetateCyt") {
-                    return "[丙酮酸羧化酶, ATP -> ADP, CO₂, 生物素]";
-                } else if (d.source === "OxaloacetateCyt" && d.target === "PEPCyt") {
-                    return "[酸烯醇式丙酮酸羧激酶, GTP -> GDP + CO₂]";
-                } else if (d.source === "Fructose-1,6-bisphosphate" && d.target === "Fructose-6-Phosphate") {
-                    return "[果糖-1,6-二磷酸酶, H₂O -> Pi]";
-                } else if (d.source === "Glucose-6-Phosphate" && d.target === "Glucose") {
-                    return "[葡萄糖-6-磷酸酶, H₂O -> Pi]";
+                if (d.source === "Glucose" && d.target === "Glucose-6-Phosphate") {
+                    return "[己糖激酶/葡萄糖激酶, ATP -> ADP]";
+                } else if (d.source === "Glucose-6-Phosphate" && d.target === "Glucose1P") {
+                    return "[磷酸葡萄糖变位酶]";
+                } else if (d.source === "Glucose1P" && d.target === "UDPGlucose") {
+                    return "[UDP-葡萄糖焦磷酸化酶, UTP -> PPi]";
+                } else if (d.source === "UDPGlucose" && d.target === "LinearGlycogen") {
+                    return "[糖原合成酶, UDP]";
+                } else if (d.source === "LinearGlycogen" && d.target === "BranchedGlycogen") {
+                    return "[糖原分支酶]";
                 }
                 return "";
             });
@@ -425,33 +430,8 @@
                          .attr("y", d => (d.source.y + d.target.y) / 2);
 
             // 更新糖异生途径的连接线标签位置
-            gngLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
-                         .attr("y", d => (d.source.y + d.target.y) / 2);
-
-            // 更新糖原生成途径的连接线标签位置
-            const gsLinkLabels = g.append("g")
-                .selectAll("text")
-                .data(data.links)
-                .join("text")
-                .attr("class", "link-label")
-                .attr("text-anchor", "middle")
-                .attr("dy", -5)
-                .style("fill", "#FFFFFF")
-                .text(d => {
-                    if (d.source === "Glucose6P" && d.target === "Glucose1P") {
-                        return "[磷酸葡萄变位酶]";
-                    } else if (d.source === "Glucose1P" && d.target === "UDPGlucose") {
-                        return "[UDP-葡萄糖焦磷酸化酶, UTP -> PPi]";
-                    } else if (d.source === "UDPGlucose" && d.target === "LinearGlycogen") {
-                        return "[糖原合成酶, UDP]";
-                    } else if (d.source === "LinearGlycogen" && d.target === "BranchedGlycogen") {
-                        return "[糖原分支酶]";
-                    }
-                    return "";
-                });
-
-            gsLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
-                        .attr("y", d => (d.source.y + d.target.y) / 2);
+            glycogenesisLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
+                                 .attr("y", d => (d.source.y + d.target.y) / 2);
         });
 
         // 拖拽函数
