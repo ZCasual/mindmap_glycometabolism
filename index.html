@@ -47,11 +47,86 @@
         .arrow {
             fill: #4a4a4a;
         }
+
+        #info-panel {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 0;
+            height: 100vh;
+            background-color: #2d2d2d;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+            padding: 0;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #info-panel.active {
+            width: 40%;
+            padding: 20px;
+        }
+
+        #info-panel-content {
+            color: #d4d4d4;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #info-panel.active #info-panel-content {
+            opacity: 1;
+        }
+
+        #info-panel h1 {
+            color: #fff;
+            border-bottom: 2px solid #4a4a4a;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        #info-panel h3 {
+            color: #2196F3;
+            margin-top: 25px;
+        }
+
+        #info-panel h4 {
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        #info-panel ul, #info-panel ol {
+            padding-left: 20px;
+        }
+
+        #info-panel li {
+            margin-bottom: 8px;
+        }
+
+        #close-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        #close-panel:hover {
+            color: #2196F3;
+        }
     </style>
 
 </head>
 <body>
     <div id="graph"></div>
+    <div id="info-panel">
+        <button id="close-panel">&times;</button>
+        <div id="info-panel-content"></div>
+    </div>
     <script>
         const data = {
             nodes: [
@@ -492,10 +567,195 @@
                      .restart();
         });
 
-        // 修改 handlePathwayClick 函数
+        const pathwayInfo = {
+            "EMP": `
+                <h1>EMP</h1>
+                <h3>糖酵解途径（EMP途径）总结</h3>
+
+                <h4>一、糖酵解的阶段</h4>
+                <p>糖酵解可以分为两个主要阶段：</p>
+                <ol>
+                    <li><strong>准备阶段（耗能阶段）</strong>：
+                        <ul>
+                            <li>葡萄糖被激活并裂解为两个三碳分子（甘油醛-3-磷酸）</li>
+                            <li>消耗2分子ATP</li>
+                        </ul>
+                    </li>
+                    <li><strong>产能阶段</strong>：
+                        <ul>
+                            <li>每个三碳分子（甘油醛-3-磷酸）被氧化生成丙酮酸</li>
+                            <li>生成4分子ATP和2分子NADH</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h4>二、糖酵解的步骤</h4>
+                <ol>
+                    <li><strong>葡萄糖磷酸化</strong>：
+                        <ul>
+                            <li>葡萄糖 → 葡萄糖-6-磷酸（己糖激酶，消耗1 ATP）</li>
+                        </ul>
+                    </li>
+                    <li><strong>葡萄糖-6-磷酸异构化</strong>：
+                        <ul>
+                            <li>葡萄糖-6-磷酸 → 果糖-6-磷酸（磷酸己糖异构酶）</li>
+                        </ul>
+                    </li>
+                    <li><strong>果糖-6-磷酸磷酸化</strong>：
+                        <ul>
+                            <li>果糖-6-磷酸 → 果糖-1,6-二磷酸（磷酸果糖激酶-1，消耗1 ATP）</li>
+                        </ul>
+                    </li>
+                    <li><strong>果糖-1,6-二磷酸裂解</strong>：
+                        <ul>
+                            <li>果糖-1,6-二磷酸 → 甘油醛-3-磷酸 + 二羟丙酮磷酸（醛缩酶）</li>
+                        </ul>
+                    </li>
+                    <li><strong>二羟丙酮磷酸异构化</strong>：
+                        <ul>
+                            <li>二羟丙酮磷酸 → 甘油醛-3-磷酸（磷酸丙糖异构酶）</li>
+                        </ul>
+                    </li>
+                    <li><strong>甘油醛-3-磷酸氧化</strong>：
+                        <ul>
+                            <li>甘油醛-3-磷酸 → 1,3-二磷酸甘油酸（甘油醛-3-磷酸脱氢酶，生成1 NADH）</li>
+                        </ul>
+                    </li>
+                    <li><strong>1,3-二磷酸甘油酸转化为3-磷酸甘油酸</strong>：
+                        <ul>
+                            <li>1,3-二磷酸甘油酸 → 3-磷酸甘油酸（磷酸甘油酸激酶，生成1 ATP）</li>
+                        </ul>
+                    </li>
+                    <li><strong>3-磷酸甘油酸异构化</strong>：
+                        <ul>
+                            <li>3-磷酸甘油酸 → 2-磷酸甘油酸（磷酸甘油酸变位酶）</li>
+                        </ul>
+                    </li>
+                    <li><strong>2-磷酸甘油酸脱水</strong>：
+                        <ul>
+                            <li>2-磷酸甘油酸 → 磷酸烯醇式丙酮酸（烯醇化酶）</li>
+                        </ul>
+                    </li>
+                    <li><strong>磷酸烯醇式丙酮酸转化为丙酮酸</strong>：
+                        <ul>
+                            <li>磷酸烯醇式丙酮酸 → 丙酮酸（丙酮酸激酶，生成1 ATP）</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h4>三、能量平衡</h4>
+                <ul>
+                    <li><strong>总反应</strong>：
+                        <ul>
+                            <li>葡萄糖 + 2 NAD+ + 2 ADP + 2 Pi → 2 丙酮酸 + 2 ATP + 2 NADH + 2 H+ + 2 H2O</li>
+                        </ul>
+                    </li>
+                    <li><strong>净生成</strong>：
+                        <ul>
+                            <li>每个葡萄糖分子通过糖酵解净生成 <strong>2 ATP</strong> 和 <strong>2 NADH</strong></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>四、关键酶和调控</h4>
+                <p>糖酵解的关键调控酶包括：</p>
+                <ol>
+                    <li><strong>己糖激酶</strong>：催化第一步反应，受葡萄糖-6-磷酸的负反馈抑制。</li>
+                    <li><strong>磷酸果糖激酶-1（PFK-1）</strong>：糖酵解的主要限速酶，受ATP、AMP、柠檬酸和胰岛素等因素的调控。ATP抑制，AMP激活。</li>
+                    <li><strong>丙酮酸激酶</strong>：催化最后一步反应，受ATP和丙氨酸的负反馈抑制，受胰岛素激活。</li>
+                </ol>
+
+                <h4>五、生理意义</h4>
+                <ol>
+                    <li><strong>提供能量</strong>：糖酵解是无氧条件下（如剧烈运动）生成ATP的重要途径。</li>
+                    <li><strong>为其他代谢途径提供中间产物</strong>：糖酵解的中间产物可以进入其他代谢途径，如磷酸戊糖途径和甘油合成途径。</li>
+                    <li><strong>为有氧呼吸做准备</strong>：在有氧条件下，糖酵解生成的丙酮酸进入线粒体，通过三羧酸循环和氧化磷酸化进一步生成ATP。</li>
+                </ol>
+
+                <h4>六、无氧条件下的发酵</h4>
+                <p>在无氧条件下，细胞无法通过电子传递链氧化NADH，因此需要通过发酵过程将糖酵解产生的NADH重新氧化为NAD⁺，以维持糖酵解的持续进行。</p>
+                
+                <h5>1. 乳酸发酵</h5>
+                <ul>
+                    <li><strong>反应过程</strong>：
+                        <ul>
+                            <li>丙酮酸 + NADH + H⁺ → 乳酸 + NAD⁺</li>
+                            <li><strong>酶</strong>：乳酸脱氢酶（Lactate dehydrogenase）</li>
+                        </ul>
+                    </li>
+                    <li><strong>举例</strong>：乳酸菌、骨骼肌细胞在无氧条件下会进行乳酸发酵。</li>
+                    <li><strong>结果</strong>：乳酸是最终产物，积累过多会导致肌肉酸痛。</li>
+                </ul>
+
+                <h5>2. 酒精发酵</h5>
+                <ul>
+                    <li><strong>反应过程</strong>：
+                        <ul>
+                            <li>丙酮酸 → 乙醛 + CO₂（丙酮酸脱羧酶，需要TPP作为辅酶）</li>
+                            <li>乙醛 + NADH + H⁺ → 乙醇 + NAD⁺（乙醇脱氢酶）</li>
+                        </ul>
+                    </li>
+                    <li><strong>举例</strong>：酵母菌在无氧条件下进行酒精发酵。</li>
+                    <li><strong>结果</strong>：乙醇和CO₂是最终产物，乙醇可以被进一步代谢或排出体外。</li>
+                </ul>
+
+                <h4>七、糖酵解的调控</h4>
+                <p>糖酵解途径受到多层次的调控，以确保细胞的能量需求和代谢平衡。关键的调控点包括：</p>
+                <ol>
+                    <li><strong>己糖激酶</strong>：
+                        <ul>
+                            <li>催化糖酵解的第一步反应，将葡萄糖转化为葡萄糖-6-磷酸</li>
+                            <li>受其产物葡萄糖-6-磷酸的负反馈抑制</li>
+                        </ul>
+                    </li>
+                    <li><strong>磷酸果糖激酶-1（PFK-1）</strong>：
+                        <ul>
+                            <li>是糖酵解途径中最重要的限速酶，受多种因素的调控：</li>
+                            <li><strong>ATP</strong>：高浓度ATP抑制PFK-1活性，AMP则激活PFK-1</li>
+                            <li><strong>柠檬酸</strong>：作为TCA循环的中间产物，高浓度时抑制PFK-1</li>
+                            <li><strong>胰岛素</strong>：通过信号通路激活PFK-1，促进糖酵解</li>
+                        </ul>
+                    </li>
+                    <li><strong>丙酮酸激酶</strong>：
+                        <ul>
+                            <li>催化糖酵解的最后一步反应</li>
+                            <li>受ATP的负反馈抑制</li>
+                            <li>受胰岛素激活</li>
+                        </ul>
+                    </li>
+                </ol>
+            `,
+            "PPP": `
+                <h1>PPP</h1>
+                <h3>磷酸戊糖途径（PPP）总结</h3>
+                // ... 添加PPP的内容 ...
+            `,
+            "TCA": `
+                <h1>TCA</h1>
+                <h3>三羧酸循环（TCA）总结</h3>
+                // ... 添加TCA的内容 ...
+            `,
+            "GS": `
+                <h1>GS</h1>
+                <h3>糖原合成途径总结</h3>
+                // ... 添加GS的内容 ...
+            `,
+            "GNG": `
+                <h1>GNG</h1>
+                <h3>糖异生途径总结</h3>
+                // ... 添加GNG的内容 ...
+            `,
+            "Glycogenesis": `
+                <h1>Glycogenesis</h1>
+                <h3>糖原合成途径总结</h3>
+                // ... 添加Glycogenesis的内容 ...
+            `
+        };
+
         function handlePathwayClick(clickedGroup) {
             // 清除其他节点的激活状态
             node.classed("active", false);
+            
             // 设置当前点击节点的激活状态
             node.filter(d => d.id === clickedGroup).classed("active", true);
 
@@ -507,7 +767,30 @@
             empLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
             pppLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
             glycogenesisLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+
+            // 显示信息面板
+            const infoPanel = document.getElementById('info-panel');
+            const infoPanelContent = document.getElementById('info-panel-content');
+            
+            if (pathwayInfo[clickedGroup]) {
+                infoPanelContent.innerHTML = pathwayInfo[clickedGroup];
+                infoPanel.classList.add('active');
+            }
         }
+
+        // 添加关闭面板的事件监听器
+        document.getElementById('close-panel').addEventListener('click', () => {
+            document.getElementById('info-panel').classList.remove('active');
+            // 重置所有元素的显示
+            node.style("opacity", 1);
+            link.style("opacity", 1);
+            doubleLink.style("opacity", 1);
+            linkLabels.style("opacity", 1);
+            empLinkLabels.style("opacity", 1);
+            pppLinkLabels.style("opacity", 1);
+            glycogenesisLinkLabels.style("opacity", 1);
+            node.classed("active", false);
+        });
     </script>
 </body>
 </html>
