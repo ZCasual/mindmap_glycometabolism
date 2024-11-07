@@ -161,10 +161,12 @@
             .attr("dy", -5)
             .style("fill", "#FFFFFF")
             .text(d => {
-                if (d.source === "AcetylCoA" && d.target === "OAA") {
-                    return "[柠檬酸合酶]";
+                if (d.source === "OAA" && d.target === "Citrate") {
+                    return "[柠檬酸合酶, +H₂O]";
                 } else if (d.source === "Citrate" && d.target === "Aconitate") {
-                    return "[顺乌头酸酶]";
+                    return "[顺乌头酸酶, -H₂O]";
+                } else if (d.source === "Aconitate" && d.target === "Isocitrate") {
+                    return "[顺乌头酸酶, +H₂O]";
                 } else if (d.source === "Isocitrate" && d.target === "αKG") {
                     return "[异柠檬酸脱氢酶, CO₂, NAD⁺ -> NADH+H⁺]";
                 } else if (d.source === "αKG" && d.target === "SuccinylCoA") {
@@ -174,7 +176,7 @@
                 } else if (d.source === "Succinate" && d.target === "Fumarate") {
                     return "[琥珀酸脱氢酶, FAD -> FADH₂]";
                 } else if (d.source === "Fumarate" && d.target === "Malate") {
-                    return "[延胡索酸酶]";
+                    return "[延胡索酸酶, +H₂O]";
                 } else if (d.source === "Malate" && d.target === "OAA") {
                     return "[苹果酸脱氢酶, NAD⁺ -> NADH+H⁺]";
                 }
