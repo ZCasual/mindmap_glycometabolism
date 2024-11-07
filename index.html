@@ -353,6 +353,34 @@
             .attr("dy", ".35em")
             .style("fill", "#FFFFFF");
 
+        // 定义主要通路节点
+        const mainPathways = ["EMP", "TCA", "PPP", "GS", "GNG", "Glycogenesis"];
+
+        // 为节点添加点击事件
+        node.on("click", (event, d) => {
+            if (mainPathways.includes(d.id)) {
+                handlePathwayClick(d.id);
+            } else {
+                // 点击其他节点时恢复所有元素显示
+                resetPathwayDisplay();
+            }
+        });
+
+        // 添加重置显示的函数
+        function resetPathwayDisplay() {
+            // 清除激活状态
+            node.classed("active", false);
+            
+            // 恢复所有元素的完全显示
+            node.style("opacity", 1);
+            link.style("opacity", 1);
+            doubleLink.style("opacity", 1);
+            linkLabels.style("opacity", 1);
+            empLinkLabels.style("opacity", 1);
+            pppLinkLabels.style("opacity", 1);
+            glycogenesisLinkLabels.style("opacity", 1);
+        }
+
         // 力导向图配置
         const simulation = d3.forceSimulation(data.nodes)
             .force("link", d3.forceLink(data.links)
@@ -463,6 +491,23 @@
             simulation.force("center", d3.forceCenter(newWidth / 2, newHeight / 2))
                      .restart();
         });
+
+        // 修改 handlePathwayClick 函数
+        function handlePathwayClick(clickedGroup) {
+            // 清除其他节点的激活状态
+            node.classed("active", false);
+            // 设置当前点击节点的激活状态
+            node.filter(d => d.id === clickedGroup).classed("active", true);
+
+            // 更新所有元素的可见性
+            node.style("opacity", d => d.group === clickedGroup ? 1 : 0.1);
+            link.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+            doubleLink.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+            linkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+            empLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+            pppLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+            glycogenesisLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+        }
     </script>
 </body>
 </html>
