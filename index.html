@@ -56,6 +56,7 @@
         const data = {
             nodes: [
                 { id: "Glucose", label: "葡萄糖", group: "Glucose" },
+                { id: "Glycogenesis", label: "Glycogenesis", group: "Glycogenesis" },
                 { id: "EMP", label: "EMP", group: "EMP" },
                 { id: "PPP", label: "PPP", group: "PPP" },
                 { id: "TCA", label: "TCA", group: "TCA" },
@@ -97,11 +98,12 @@
                 { id: "BranchedGlycogen", label: "分支糖原", group: "GS" }
             ],
             links: [
-                { source: "Glucose", target: "EMP", double: false },
+                { source: "GS", target: "EMP", double: false },
+                { source: "Glycogenesis", target: "EMP", double: true },
                 { source: "EMP", target: "TCA", double: false },
                 { source: "TCA", target: "PPP", double: false },
                 { source: "EMP", target: "GNG", double: true },
-                { source: "GS", target: "Glucose", double: false },
+                { source: "GS", target: "GS", double: false },
                 { source: "AcetylCoA", target: "OAA", double: false },
                 { source: "OAA", target: "Citrate", double: false },
                 { source: "Citrate", target: "Aconitate", double: true },
@@ -165,8 +167,8 @@
 
         // 添加颜色比例尺
         const color = d3.scaleOrdinal()
-            .domain(["Glucose", "EMP", "TCA", "PPP", "GS", "GNG"])
-            .range(["#FF1493", "#4CAF50", "#FF5722", "#2196F3", "#9C27B0", "#FFC107"]);
+            .domain(["EMP", "TCA", "PPP", "GS", "GNG", "Glycogenesis"])
+            .range(["#4CAF50", "#FF5722", "#2196F3", "#9C27B0", "#FFC107", "#FF1493"]);
 
         // 定义箭头
         const defs = g.append("defs");
@@ -315,7 +317,7 @@
                 if (d.source === "PyruvateCyt" && d.target === "OxaloacetateCyt") {
                     return "[丙酮酸羧化酶, ATP -> ADP, CO₂, 生物素]";
                 } else if (d.source === "OxaloacetateCyt" && d.target === "PEPCyt") {
-                    return "[磷酸烯醇式丙酮酸羧激酶, GTP -> GDP + CO₂]";
+                    return "[酸烯醇式丙酮酸羧激酶, GTP -> GDP + CO₂]";
                 } else if (d.source === "Fructose-1,6-bisphosphate" && d.target === "Fructose-6-Phosphate") {
                     return "[果糖-1,6-二磷酸酶, H₂O -> Pi]";
                 } else if (d.source === "Glucose-6-Phosphate" && d.target === "Glucose") {
@@ -437,7 +439,7 @@
                 .style("fill", "#FFFFFF")
                 .text(d => {
                     if (d.source === "Glucose6P" && d.target === "Glucose1P") {
-                        return "[磷酸葡萄糖变位酶]";
+                        return "[磷酸葡萄变位酶]";
                     } else if (d.source === "Glucose1P" && d.target === "UDPGlucose") {
                         return "[UDP-葡萄糖焦磷酸化酶, UTP -> PPi]";
                     } else if (d.source === "UDPGlucose" && d.target === "LinearGlycogen") {
