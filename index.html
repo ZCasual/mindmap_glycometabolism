@@ -130,7 +130,7 @@
     <script>
         const data = {
             nodes: [
-                { id: "Glucose", label: "葡萄糖", group: "Glycogenesis" },
+                { id: "Glucose", label: "葡萄糖", group: "EMP" },
                 { id: "Glycogenesis", label: "Glycogenesis", group: "Glycogenesis" },
                 { id: "EMP", label: "EMP", group: "EMP" },
                 { id: "PPP", label: "PPP", group: "PPP" },
@@ -147,7 +147,7 @@
                 { id: "Fumarate", label: "延胡索酸", group: "TCA" },
                 { id: "Malate", label: "苹果酸", group: "TCA" },
                 { id: "OAA", label: "草酰乙酸", group: "TCA" },
-                { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "Glycogenesis" },
+                { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "EMP" },
                 { id: "Fructose-6-Phosphate", label: "果糖-6-磷酸", group: "EMP" },
                 { id: "Fructose-1,6-bisphosphate", label: "果糖-1,6-二磷酸", group: "EMP" },
                 { id: "Glyceraldehyde-3-Phosphate", label: "甘油醛-3-磷酸", group: "EMP" },
@@ -155,7 +155,7 @@
                 { id: "1,3-Bisphosphoglycerate", label: "1,3-二磷酸甘油酸", group: "EMP" },
                 { id: "3-Phosphoglycerate", label: "3-磷酸甘油酸", group: "EMP" },
                 { id: "2-Phosphoglycerate", label: "2-磷酸甘油酸", group: "EMP" },
-                { id: "Phosphoenolpyruvate", label: "磷酸烯醇式丙酮酸", group: "EMP" },
+                { id: "Phosphoenolpyruvate", label: "���酸烯醇式丙酮酸", group: "EMP" },
                 { id: "Pyruvate", label: "丙酮酸", group: "EMP" },
                 { id: "6-Phosphoglucono-δ-lactone", label: "6-磷酸葡糖酸内酯", group: "PPP" },
                 { id: "6-Phosphogluconate", label: "6-磷酸葡糖酸", group: "PPP" },
@@ -292,7 +292,9 @@
             .attr("dy", -5)
             .style("fill", "#FFFFFF")
             .text(d => {
-                if (d.source === "OAA" && d.target === "Citrate") {
+                if (d.source === "Glucose" && d.target === "Glucose-6-Phosphate") {
+                    return "[己糖激酶/葡萄糖激酶, ATP -> ADP]";
+                } else if (d.source === "OAA" && d.target === "Citrate") {
                     return "[柠檬酸合酶, +H₂O]";
                 } else if (d.source === "Citrate" && d.target === "Aconitate") {
                     return "[顺乌头酸酶, -H₂O]";
@@ -324,9 +326,7 @@
             .attr("dy", -5)
             .style("fill", "#FFFFFF")
             .text(d => {
-                if (d.source === "Glucose" && d.target === "Glucose-6-Phosphate") {
-                    return "[己糖激酶, ATP -> ADP]";
-                } else if (d.source === "Glucose-6-Phosphate" && d.target === "Fructose-6-Phosphate") {
+                if (d.source === "Glucose-6-Phosphate" && d.target === "Fructose-6-Phosphate") {
                     return "[磷酸己糖异构酶]";
                 } else if (d.source === "Fructose-6-Phosphate" && d.target === "Fructose-1,6-bisphosphate") {
                     return "[磷酸果糖激酶-1, ATP -> ADP]";
@@ -673,7 +673,7 @@
                 </ol>
 
                 <h4>六、无氧条件下的发酵</h4>
-                <p>在无氧条件下，细胞无法通过电子传递链氧化NADH，因此需要通过发酵过程将糖酵解产生的NADH重新氧化为NAD⁺，以维持糖酵解的持续进行。</p>
+                <p>在无氧条件下，细胞无法通过电子传递链氧化NADH，因此需要通过发酵过程将糖酵解产生的NADH重新氧化为NAD⁺，以维持���酵解的持续进行。</p>
                 
                 <h5>1. 乳酸发酵</h5>
                 <ul>
@@ -696,7 +696,7 @@
                         </ul>
                     </li>
                     <li><strong>举例</strong>：酵母菌在无氧条件下进行酒精发酵。</li>
-                    <li><strong>结果</strong>：乙醇和CO₂是最终产物，乙醇可以被进一步代谢或排出体外。</li>
+                    <li><strong>结果</strong>：乙醇和CO₂是最终产物，乙醇可以被��一步代谢或排出体外。</li>
                 </ul>
 
                 <h4>七、糖酵解的调控</h4>
@@ -759,14 +759,63 @@
             // 设置当前点击节点的激活状态
             node.filter(d => d.id === clickedGroup).classed("active", true);
 
+            // 定义不需要半透明的路径组
+            const keepOpaqueGroups = ["PPP", "Glycogenesis", "EMP"];
+
             // 更新所有元素的可见性
-            node.style("opacity", d => d.group === clickedGroup ? 1 : 0.1);
-            link.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-            doubleLink.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-            linkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-            empLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-            pppLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-            glycogenesisLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+            if (keepOpaqueGroups.includes(clickedGroup)) {
+                // 如果是 PPP、糖原合成或 EMP，保持 G-6-P 相关的节点和连接不透明
+                node.style("opacity", d => {
+                    // G-6-P 始终保持不透明
+                    if (d.id === "Glucose-6-Phosphate") return 1;
+                    // 当前点击组的节点保持不透明
+                    return d.group === clickedGroup ? 1 : 0.1;
+                });
+                
+                link.style("opacity", d => {
+                    // 如果连接涉及 G-6-P，保持不透明
+                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
+                    // 当前点击组的连接保持不透明
+                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+                });
+                
+                doubleLink.style("opacity", d => {
+                    // 如果连接涉及 G-6-P，保持不透明
+                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
+                    // 当前点击组的连接保持不透明
+                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+                });
+                
+                // 标签的透明度也相应调整
+                linkLabels.style("opacity", d => {
+                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
+                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+                });
+                
+                empLinkLabels.style("opacity", d => {
+                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
+                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+                });
+                
+                pppLinkLabels.style("opacity", d => {
+                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
+                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+                });
+                
+                glycogenesisLinkLabels.style("opacity", d => {
+                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
+                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+                });
+            } else {
+                // 其他路径保持原有的半透明效果
+                node.style("opacity", d => d.group === clickedGroup ? 1 : 0.1);
+                link.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+                doubleLink.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+                linkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+                empLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+                pppLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+                glycogenesisLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
+            }
 
             // 显示信息面板
             const infoPanel = document.getElementById('info-panel');
