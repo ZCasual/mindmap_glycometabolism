@@ -7,17 +7,22 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
-            background-color: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #1e1e1e;
         }
 
         #graph {
             width: 100%;
-            height: 600px;
+            height: 80%;
             background-color: #1e1e1e;
             border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .node circle {
@@ -118,11 +123,66 @@
         #close-panel:hover {
             color: #2196F3;
         }
+
+        #control-panel {
+            width: 100%;
+            height: 20%;
+            background-color: #2d2d2d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        #control-panel button {
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #control-EMP {
+            background-color: #4CAF50; /* EMP 绿色 */
+        }
+
+        #control-TCA {
+            background-color: #FF5722; /* TCA 橙色 */
+        }
+
+        #control-PPP {
+            background-color: #2196F3; /* PPP 蓝色 */
+        }
+
+        #control-GS {
+            background-color: #9C27B0; /* GS 紫色 */
+        }
+
+        #control-GNG {
+            background-color: #FFC107; /* GNG 黄色 */
+        }
+
+        #control-panel button:hover {
+            opacity: 0.8; /* 鼠标悬停时透明度变化 */
+        }
     </style>
 
 </head>
 <body>
     <div id="graph"></div>
+    <div id="control-panel">
+        <button id="control-EMP">EMP</button>
+        <button id="control-TCA">TCA</button>
+        <button id="control-PPP">PPP</button>
+        <button id="control-GS">GS</button>
+        <button id="control-GNG">GNG</button>
+    </div>
     <div id="info-panel">
         <button id="close-panel">&times;</button>
         <div id="info-panel-content"></div>
@@ -353,7 +413,7 @@
                 return "";
             });
 
-        // 添加关键酶和产物信息
+        // 添��关键酶和产物信息
         const empLinkLabels = g.append("g")
             .selectAll("text")
             .data(data.links)
@@ -478,7 +538,7 @@
             }
         });
 
-        // 添加重置显示的函数
+        // 添加重置显示函数
         function resetPathwayDisplay() {
             // 清除激活状态
             node.classed("active", false);
@@ -705,7 +765,7 @@
                 <ol>
                     <li><strong>己糖激酶</strong>：催化第一步反应，受葡萄糖-6-磷酸的负反馈抑制。</li>
                     <li><strong>磷酸果糖激酶-1（PFK-1）</strong>：糖酵解的主要限速酶，受ATP、AMP、柠檬酸和胰岛素等因素的调控。ATP抑制，AMP激活。</li>
-                    <li><strong>丙酮酸激酶</strong>：催化最后一步反应，受ATP和丙氨酸的负反馈抑制，受胰岛素激活。</li>
+                    <li><strong>丙酮酸激酶</strong>：催化最后一步反��，受ATP和丙氨酸的负反馈抑制，受胰岛素激活。</li>
                 </ol>
 
                 <h4>五、生理意义</h4>
@@ -743,7 +803,7 @@
                 </ul>
 
                 <h4>七、糖酵解的调控</h4>
-                <p>糖酵解途径受到多层次的调控，以确保细胞的能量需求和代谢平衡。关键的调控点包括：</p>
+                <p>糖酵解途径受到多层次的调控，确保细胞的能量需求和代谢平衡。关键的调控点包括：</p>
                 <ol>
                     <li><strong>己糖激酶</strong>：
                         <ul>
@@ -926,6 +986,27 @@
                 }
                 return "";
             });
+
+        // 新增控制按钮的事件监听器
+        document.getElementById('control-EMP').addEventListener('click', () => {
+            handlePathwayClick('EMP');
+        });
+
+        document.getElementById('control-TCA').addEventListener('click', () => {
+            handlePathwayClick('TCA');
+        });
+
+        document.getElementById('control-PPP').addEventListener('click', () => {
+            handlePathwayClick('PPP');
+        });
+
+        document.getElementById('control-GS').addEventListener('click', () => {
+            handlePathwayClick('GS');
+        });
+
+        document.getElementById('control-GNG').addEventListener('click', () => {
+            handlePathwayClick('GNG');
+        });
     </script>
 </body>
 </html>
