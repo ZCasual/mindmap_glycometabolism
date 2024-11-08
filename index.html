@@ -130,13 +130,28 @@
     <script>
         const data = {
             nodes: [
-                { id: "Glucose", label: "葡萄糖", group: "EMP" },
+                // 主要通路节点
                 { id: "Glycogenesis", label: "Glycogenesis", group: "Glycogenesis" },
                 { id: "EMP", label: "EMP", group: "EMP" },
                 { id: "PPP", label: "PPP", group: "PPP" },
                 { id: "TCA", label: "TCA", group: "TCA" },
                 { id: "GS", label: "GS", group: "GS" },
                 { id: "GNG", label: "GNG", group: "GNG" },
+
+                // EMP 途径节点
+                { id: "Glucose", label: "葡萄糖", group: "EMP" },  // 葡萄糖属于 EMP
+                { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "EMP" },
+                { id: "Fructose-6-Phosphate", label: "果糖-6-磷酸", group: "EMP" },
+                { id: "Fructose-1,6-bisphosphate", label: "果糖-1,6-二磷酸", group: "EMP" },
+                { id: "Glyceraldehyde-3-Phosphate", label: "甘油醛-3-磷酸", group: "EMP" },
+                { id: "Dihydroxyacetone Phosphate", label: "二羟基丙酮磷酸", group: "EMP" },
+                { id: "1,3-Bisphosphoglycerate", label: "1,3-二磷酸甘油酸", group: "EMP" },
+                { id: "3-Phosphoglycerate", label: "3-磷酸甘油酸", group: "EMP" },
+                { id: "2-Phosphoglycerate", label: "2-磷酸甘油酸", group: "EMP" },
+                { id: "Phosphoenolpyruvate", label: "磷酸烯醇式丙酮酸", group: "EMP" },
+                { id: "Pyruvate", label: "丙酮酸", group: "EMP" },
+
+                // TCA 循环节点
                 { id: "AcetylCoA", label: "乙酰辅酶A", group: "TCA" },
                 { id: "Citrate", label: "柠檬酸", group: "TCA" },
                 { id: "Aconitate", label: "顺乌头酸", group: "TCA" },
@@ -147,30 +162,16 @@
                 { id: "Fumarate", label: "延胡索酸", group: "TCA" },
                 { id: "Malate", label: "苹果酸", group: "TCA" },
                 { id: "OAA", label: "草酰乙酸", group: "TCA" },
-                { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "EMP" },
-                { id: "Fructose-6-Phosphate", label: "果糖-6-磷酸", group: "EMP" },
-                { id: "Fructose-1,6-bisphosphate", label: "果糖-1,6-二磷酸", group: "EMP" },
-                { id: "Glyceraldehyde-3-Phosphate", label: "甘油醛-3-磷酸", group: "EMP" },
-                { id: "Dihydroxyacetone Phosphate", label: "二羟基丙酮磷酸", group: "EMP" },
-                { id: "1,3-Bisphosphoglycerate", label: "1,3-二磷酸甘油酸", group: "EMP" },
-                { id: "3-Phosphoglycerate", label: "3-磷酸甘油酸", group: "EMP" },
-                { id: "2-Phosphoglycerate", label: "2-磷酸甘油酸", group: "EMP" },
-                { id: "Phosphoenolpyruvate", label: "酸烯醇式丙酮", group: "EMP" },
-                { id: "Pyruvate", label: "丙酮酸", group: "EMP" },
+
+                // PPP 途径节点
                 { id: "6-Phosphoglucono-δ-lactone", label: "6-磷酸葡糖酸内酯", group: "PPP" },
                 { id: "6-Phosphogluconate", label: "6-磷酸葡糖酸", group: "PPP" },
                 { id: "Ribulose-5-Phosphate", label: "核酮糖-5-磷酸", group: "PPP" },
                 { id: "Ribose-5-Phosphate", label: "核糖-5-磷酸", group: "PPP" },
                 { id: "Erythrose-4-Phosphate", label: "赤藓糖-4-磷酸", group: "PPP" },
                 { id: "Sedoheptulose-7-Phosphate", label: "景天庚酮糖-7-磷酸", group: "PPP" },
-                { id: "OxaloacetateCyt", label: "胞质草酰乙酸", group: "GNG" },
-                { id: "PEPCyt", label: "胞质磷酸烯醇式丙酮酸", group: "GNG" },
-                { id: "PyruvateCyt", label: "胞质丙酮酸", group: "GNG" },
-                { id: "Glucose1P", label: "葡萄糖-1-磷酸", group: "Glycogenesis" },
-                { id: "UDPGlucose", label: "UDP-葡萄糖", group: "Glycogenesis" },
-                { id: "LinearGlycogen", label: "线性糖原", group: "Glycogenesis" },
-                { id: "BranchedGlycogen", label: "分支糖原", group: "Glycogenesis" },
-                { id: "Glycogen", label: "糖原", group: "Glycogenesis" },
+
+                // GNG 途径节点
                 { id: "PyruvateCyt", label: "胞质丙酮酸", group: "GNG" },
                 { id: "OxaloacetateCyt", label: "胞质草酰乙酸", group: "GNG" },
                 { id: "PEPCyt", label: "胞质磷酸烯醇式丙酮酸", group: "GNG" },
@@ -182,7 +183,13 @@
                 { id: "F1,6BP", label: "果糖-1,6-二磷酸", group: "GNG" },
                 { id: "F6P", label: "果糖-6-磷酸", group: "GNG" },
                 { id: "G6P", label: "葡萄糖-6-磷酸", group: "GNG" },
-                { id: "Glucose", label: "葡萄糖", group: "GNG" }
+
+                // Glycogenesis 途径节点
+                { id: "Glucose1P", label: "葡萄糖-1-磷酸", group: "Glycogenesis" },
+                { id: "UDPGlucose", label: "UDP-葡萄糖", group: "Glycogenesis" },
+                { id: "LinearGlycogen", label: "线性糖原", group: "Glycogenesis" },
+                { id: "BranchedGlycogen", label: "分支糖原", group: "Glycogenesis" },
+                { id: "Glycogen", label: "糖原", group: "Glycogenesis" }
             ],
             links: [
                 { source: "GS", target: "EMP", double: false },
