@@ -139,7 +139,7 @@
                 { id: "GNG", label: "GNG", group: "GNG" },
 
                 // EMP 途径节点
-                { id: "Glucose", label: "葡萄糖", group: "EMP" },  // 葡萄糖属于 EMP
+                { id: "Glucose", label: "葡萄糖", group: "EMP" },
                 { id: "Glucose-6-Phosphate", label: "葡萄糖-6-磷酸", group: "EMP" },
                 { id: "Fructose-6-Phosphate", label: "果糖-6-磷酸", group: "EMP" },
                 { id: "Fructose-1,6-bisphosphate", label: "果糖-1,6-二磷酸", group: "EMP" },
@@ -172,12 +172,12 @@
                 { id: "Sedoheptulose-7-Phosphate", label: "景天庚酮糖-7-磷酸", group: "PPP" },
 
                 // GNG 途径节点
-                { id: "PyruvateCyt", label: "胞质丙酮酸", group: "GNG" },
-                { id: "OxaloacetateCyt", label: "胞质草酰乙酸", group: "GNG" },
-                { id: "PEPCyt", label: "胞质磷酸烯醇式丙酮酸", group: "GNG" },
-                { id: "2PGCyt", label: "胞质2-磷酸甘油酸", group: "GNG" },
-                { id: "3PGCyt", label: "胞质3-磷酸甘油酸", group: "GNG" },
-                { id: "1,3BPGCyt", label: "胞质1,3-二磷酸甘油酸", group: "GNG" },
+                { id: "Pyruvate", label: "丙酮酸", group: "GNG" },
+                { id: "Oxaloacetate", label: "草酰乙酸", group: "GNG" },
+                { id: "PEP", label: "磷酸烯醇式丙酮酸", group: "GNG" },
+                { id: "2PG", label: "2-磷酸甘油酸", group: "GNG" },
+                { id: "3PG", label: "3-磷酸甘油酸", group: "GNG" },
+                { id: "1,3BPG", label: "1,3-二磷酸甘油酸", group: "GNG" },
                 { id: "GAP", label: "甘油醛-3-磷酸", group: "GNG" },
                 { id: "DHAP", label: "二羟丙酮磷酸", group: "GNG" },
                 { id: "F1,6BP", label: "果糖-1,6-二磷酸", group: "GNG" },
@@ -228,22 +228,13 @@
                 { source: "Erythrose-4-Phosphate", target: "Fructose-6-Phosphate", double: true },
                 { source: "Erythrose-4-Phosphate", target: "Sedoheptulose-7-Phosphate", double: true },
                 { source: "Sedoheptulose-7-Phosphate", target: "Fructose-6-Phosphate", double: true },
-                { source: "PyruvateCyt", target: "OxaloacetateCyt", double: false },
-                { source: "OxaloacetateCyt", target: "PEPCyt", double: false },
-                { source: "PEPCyt", target: "Phosphoenolpyruvate", double: true },
-                { source: "Pyruvate", target: "PyruvateCyt", double: true },
-                { source: "Glucose-6-Phosphate", target: "Glucose1P", double: true },
-                { source: "Glucose1P", target: "UDPGlucose", double: false },
-                { source: "UDPGlucose", target: "LinearGlycogen", double: false },
-                { source: "LinearGlycogen", target: "BranchedGlycogen", double: true },
-                { source: "BranchedGlycogen", target: "Glycogen", double: false },
                 { source: "Pyruvate", target: "AcetylCoA", double: false },
-                { source: "PyruvateCyt", target: "OxaloacetateCyt", double: false },
-                { source: "OxaloacetateCyt", target: "PEPCyt", double: false },
-                { source: "PEPCyt", target: "2PGCyt", double: false },
-                { source: "2PGCyt", target: "3PGCyt", double: true },
-                { source: "3PGCyt", target: "1,3BPGCyt", double: false },
-                { source: "1,3BPGCyt", target: "GAP", double: false },
+                { source: "Pyruvate", target: "Oxaloacetate", double: false },
+                { source: "Oxaloacetate", target: "PEP", double: false },
+                { source: "PEP", target: "2PG", double: false },
+                { source: "2PG", target: "3PG", double: true },
+                { source: "3PG", target: "1,3BPG", double: false },
+                { source: "1,3BPG", target: "GAP", double: false },
                 { source: "GAP", target: "DHAP", double: true },
                 { source: "GAP", target: "F1,6BP", double: false },
                 { source: "F1,6BP", target: "F6P", double: false },
@@ -283,7 +274,7 @@
         defs.append("marker")
             .attr("id", "arrow")
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 10)  // 保持您的refX值
+            .attr("refX", 10)
             .attr("refY", 0)
             .attr("markerWidth", 6)
             .attr("markerHeight", 6)
@@ -331,9 +322,9 @@
                 } else if (d.source === "Aconitate" && d.target === "Isocitrate") {
                     return "[顺乌头酸酶, +H₂O]";
                 } else if (d.source === "Isocitrate" && d.target === "αKG") {
-                    return "[异柠檬酸脱氢酶, CO₂, NAD⁺ -> NADH+H⁺]";
+                    return "[异柠檬酸脱氢酶, CO₂, NAD⁺ -> NADH]";
                 } else if (d.source === "αKG" && d.target === "SuccinylCoA") {
-                    return "[α-酮戊二酸脱氢酶复合体, CO₂, NAD⁺ -> NADH+H⁺]";
+                    return "[α-酮戊二酸脱氢酶复合体, CO₂, NAD⁺ -> NADH]";
                 } else if (d.source === "SuccinylCoA" && d.target === "Succinate") {
                     return "[琥珀酰辅酶A合成酶, GDP -> GTP]";
                 } else if (d.source === "Succinate" && d.target === "Fumarate") {
@@ -341,7 +332,7 @@
                 } else if (d.source === "Fumarate" && d.target === "Malate") {
                     return "[延胡索酸酶, +H₂O]";
                 } else if (d.source === "Malate" && d.target === "OAA") {
-                    return "[苹果酸脱氢酶, NAD⁺ -> NADH+H⁺]";
+                    return "[苹果酸脱氢酶, NAD⁺ -> NADH]";
                 }
                 return "";
             });
@@ -365,7 +356,7 @@
                 } else if (d.source === "Dihydroxyacetone Phosphate" && d.target === "Glyceraldehyde-3-Phosphate") {
                     return "[磷酸三糖异构酶]";
                 } else if (d.source === "Glyceraldehyde-3-Phosphate" && d.target === "1,3-Bisphosphoglycerate") {
-                    return "[甘油醛-3-磷酸脱氢酶, NAD⁺ -> NADH+H⁺]";
+                    return "[甘油醛-3-磷酸脱氢酶, NAD⁺ -> NADH]";
                 } else if (d.source === "1,3-Bisphosphoglycerate" && d.target === "3-Phosphoglycerate") {
                     return "[磷酸甘油酸激酶, ADP -> ATP]";
                 } else if (d.source === "3-Phosphoglycerate" && d.target === "2-Phosphoglycerate") {
@@ -375,7 +366,7 @@
                 } else if (d.source === "Phosphoenolpyruvate" && d.target === "Pyruvate") {
                     return "[丙酮酸激酶, ADP -> ATP]";
                 } else if (d.source === "Pyruvate" && d.target === "AcetylCoA") {
-                    return "[丙酮酸脱氢酶复合体, NAD⁺ -> NADH+H⁺, CoA-SH -> CO₂]";
+                    return "[丙酮酸脱氢酶复合体, NAD⁺ -> NADH, CoA-SH -> CO₂]";
                 }
                 return "";
             });
@@ -391,7 +382,7 @@
             .style("fill", "#FFFFFF")
             .text(d => {
                 if (d.source === "Glucose-6-Phosphate" && d.target === "6-Phosphoglucono-δ-lactone") {
-                    return "[葡萄糖-6-磷酸脱氢酶, NADP⁺ -> NADPH+H⁺]";
+                    return "[葡萄糖-6-磷酸脱氢酶, NADP⁺ -> NADPH]";
                 } else if (d.source === "6-Phosphoglucono-δ-lactone" && d.target === "6-Phosphogluconate") {
                     return "[6-磷酸葡糖酸内酯酶]";
                 } else if (d.source === "6-Phosphogluconate" && d.target === "Ribulose-5-Phosphate") {
@@ -484,6 +475,8 @@
             empLinkLabels.style("opacity", 1);
             pppLinkLabels.style("opacity", 1);
             glycogenesisLinkLabels.style("opacity", 1);
+            gngLinkLabels.style("opacity", 1);
+            node.classed("active", false);
         }
 
         // 力向图
@@ -707,7 +700,7 @@
                 </ol>
 
                 <h4>六、无氧条件下的发酵</h4>
-                <p>在无氧条件下，细胞无法通过电子传递链氧化NADH，因此需要通过发酵过程将糖酵解产生的NADH重新氧化为NAD⁺，以维持酵解的持进行。</p>
+                <p>在无氧条件下，细胞无法通过电子传递链氧化NADH，因此需要通过发酵过程将糖酵解产生的NADH重新氧化为NAD⁺，以维持酵解的持续进行。</p>
                 
                 <h5>1. 乳酸发酵</h5>
                 <ul>
@@ -878,6 +871,7 @@
             empLinkLabels.style("opacity", 1);
             pppLinkLabels.style("opacity", 1);
             glycogenesisLinkLabels.style("opacity", 1);
+            gngLinkLabels.style("opacity", 1);
             node.classed("active", false);
         });
 
