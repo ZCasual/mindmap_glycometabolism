@@ -172,6 +172,10 @@
             background-color: #FFC107; /* GNG 黄色 */
         }
 
+        #control-GC {
+            background-color: #E91E63; /* GC 粉红色 */
+        }
+
         #control-Other {
             background-color: #424242; /* Other 深灰色 */
         }
@@ -314,7 +318,7 @@
             transform: translateX(-100%);
         }
 
-        /* 添加展开/收起按钮样式 */
+        /* 添加/收起按钮样式 */
         #toggle-control-panel {
             position: absolute;
             right: -30px;
@@ -343,7 +347,8 @@
         <button id="control-PPP">PPP</button>
         <button id="control-GS">GS</button>
         <button id="control-GNG">GNG</button>
-        <button id="control-Other">Other</button> <!-- 增 Other 按钮 -->
+        <button id="control-GC">GC</button>  <!-- 新增 GC 按钮 -->
+        <button id="control-Other">Other</button>
     </div>
     <div id="info-panel">
         <button id="close-panel">&times;</button>
@@ -422,7 +427,7 @@
                 { id: "6-Phosphogluconate", label: "6-磷酸葡糖酸", group: "PPP" },
                 { id: "Ribulose-5-Phosphate", label: "核糖-5-磷酸", group: "PPP" },
                 { id: "Ribose-5-Phosphate", label: "核糖-5-磷酸", group: "PPP" },
-                { id: "Erythrose-4-Phosphate", label: "赤藓糖-4-磷酸", group: "PPP" },
+                { id: "Erythrose-4-Phosphate", label: "赤藓糖-4-酸", group: "PPP" },
                 { id: "Sedoheptulose-7-Phosphate", label: "景天庚酮糖-7-磷酸", group: "PPP" },
 
                 // GNG 途径节点
@@ -442,7 +447,17 @@
                 { id: "UDPGlucose", label: "UDP-葡萄糖", group: "GS" },
                 { id: "LinearGlycogen", label: "线性糖原", group: "GS" },
                 { id: "BranchedGlycogen", label: "分支糖原", group: "GS" },
-                { id: "Glycogen", label: "糖原", group: "GS" }
+                { id: "Glycogen", label: "糖原", group: "GS" },
+
+                // 在 data.nodes 数组中添加以下节点
+                { id: "GC", label: "GC", group: "GC" },  // 主节点
+                { id: "Isocitrate_GC", label: "异柠檬酸", group: "GC" },
+                { id: "Succinate_GC", label: "琥珀酸", group: "GC" },
+                { id: "Glyoxylate", label: "乙醛酸", group: "GC" },
+                { id: "Malate_GC", label: "苹果酸", group: "GC" },
+                { id: "OAA_GC", label: "草酰乙酸", group: "GC" },
+                { id: "PEP_GC", label: "磷酸烯醇式丙酮酸", group: "GC" },
+                { id: "AcetylCoA_GC", label: "乙酰辅酶A", group: "GC" }
             ],
             links: [
                 { source: "DOG", target: "EMP", double: true },  // 狗链
@@ -498,7 +513,15 @@
                 { source: "Glucose1P", target: "UDPGlucose", double: false },
                 { source: "UDPGlucose", target: "LinearGlycogen", double: false },
                 { source: "LinearGlycogen", target: "BranchedGlycogen", double: false },
-                { source: "BranchedGlycogen", target: "Glycogen", double: false }
+                { source: "BranchedGlycogen", target: "Glycogen", double: false },
+
+                // 在 data.links 数组中添加以下连接
+                { source: "Isocitrate_GC", target: "Succinate_GC", double: false },
+                { source: "Isocitrate_GC", target: "Glyoxylate", double: false },
+                { source: "Glyoxylate", target: "Malate_GC", double: false },
+                { source: "AcetylCoA_GC", target: "Malate_GC", double: false },
+                { source: "Malate_GC", target: "OAA_GC", double: false },
+                { source: "OAA_GC", target: "PEP_GC", double: false }
             ]
         };
 
@@ -523,8 +546,8 @@
 
         // 添加颜色比例尺
         const color = d3.scaleOrdinal()
-            .domain(["EMP", "TCA", "PPP", "GS", "GNG", "DOG"])  // 添加 DOG 到域中
-            .range(["#4CAF50", "#FF5722", "#2196F3", "#9C27B0", "#FFC107", "#1f2623"]);  // 添加 DOG 的颜色
+            .domain(["EMP", "TCA", "PPP", "GS", "GNG", "DOG", "GC"])  // 添加 GC
+            .range(["#4CAF50", "#FF5722", "#2196F3", "#9C27B0", "#FFC107", "#1f2623", "#E91E63"]);  // 添加 GC 的颜色
 
         // 定义箭头
         const defs = g.append("defs");
@@ -662,7 +685,7 @@
                 } else if (d.source === "Ribulose-5-Phosphate" && d.target === "Ribose-5-Phosphate") {
                     return "[磷酸戊糖异构酶]";
                 } else if (d.source === "Ribulose-5-Phosphate" && d.target === "Erythrose-4-Phosphate") {
-                    return "[转酮醇酶]";
+                    return "[转酮酶]";
                 } else if (d.source === "Ribose-5-Phosphate" && d.target === "Fructose-6-Phosphate") {
                     return "[转醛醇酶]";
                 } else if (d.source === "Erythrose-4-Phosphate" && d.target === "Fructose-6-Phosphate") {
@@ -723,7 +746,7 @@
             .style("fill", "#FFFFFF");
 
         // 定义主要通路节点
-        const mainPathways = ["EMP", "TCA", "PPP", "GS", "GNG"];
+        const mainPathways = ["EMP", "TCA", "PPP", "GS", "GNG", "GC"];
 
         // 为节点添加点击事件
         node.on("click", (event, d) => {
@@ -837,7 +860,7 @@
                                  .attr("y", d => (d.source.y + d.target.y) / 2);
         });
 
-        // 修改拖拽相关函数
+        // 修改拖拽相关函
         function dragstarted(event) {
             if (!event.active) simulation.alphaTarget(0.1).restart();
             event.subject.fx = event.subject.x;
@@ -901,19 +924,19 @@
                 <h4>意义</h4>
                 <p>糖酵解途径具有重要的生理意义：</p>
                 <ol>
-                    <li><strong>快速能量供应</strong>：糖酵解是无氧条件下（如剧烈运动时）快速提供能量的主要途径，能够迅速生成ATP以满足细胞的能量需求。</li>
-                    <li><strong>有氧代谢前体</strong>：糖酵生成的丙酮酸可以进入线粒体，进一步参与有氧呼吸，生成更多的ATP。</li>
+                    <li><strong>快速能量供应</strong>：糖酵解是无氧条件下（如剧烈运动时）快速提供能量的主途径，能够迅速生成ATP以满足细胞的能量需求。</li>
+                    <li><strong>有氧代谢前体</strong>：糖酵生成的丙酮酸可以进入线粒���，进一步参与有氧呼吸，生成更多的ATP。</li>
                     <li><strong>中间代谢产物</strong>：糖酵解途径的中间产物可以用于其他代谢途径，如磷酸戊糖途径、氨基酸合成等。</li>
                     <li><strong>维持氧化还原平衡</strong>：糖酵解过程中生成的NADH需要通过乳酸发酵或其他途径重新氧化为NAD+，以维持细胞内的氧化还原平衡。</li>
                 </ol>
-                <p>糖酵解途径在生物体的能量代谢中起着至关重要的作用，是多种代谢途径的交汇点和基础。</p>
+                <p>糖酵解途径在生物体的能量代谢中起着至关重要的作用，是多种代谢途径的汇点和基础。</p>
             `,
             "PPP": `
                 <h1>PPP</h1>
                 <h3>磷酸戊糖途径（Pentose Phosphate Pathway，PPP）</h3>
 
                 <h4>定义</h4>
-                <p>磷酸戊糖途径（PPP），是一种在细质中进行的代谢途径。该途径的主要功能是生成核苷酸合成所需的核糖-5-磷酸和维持细胞内还原型谷胱甘肽的水平。PPP分为两个阶段：氧化阶段和非氧化阶段。氧化阶段生成NADPH，而非氧化阶段则涉及糖磷酸的相互转化以生成核糖-5-磷酸。</p>
+                <p>磷酸戊糖途（PPP），是一种在细质中进行的代谢途径。该途径的主要功能是生成核苷酸合成所需的核糖-5-磷酸和维持细胞内还原型谷胱甘肽的水平。PPP分为两个阶段：氧化阶段和非氧化阶段。氧化阶段生成NADPH，而非氧化阶段则涉及糖磷酸的相互转化以生成核糖-5-磷酸。</p>
 
                 <h4>反应位置</h4>
                 <p>磷酸戊糖途径发生在细胞质中。</p>
@@ -946,7 +969,7 @@
                 <h3>三羧酸循环（TCA循环，Tricarboxylic Acid Cycle）</h3>
 
                 <h4>定义</h4>
-                <p>三羧酸循环（TCA循环），发生在线粒体基质中，TCA循环不仅是能量产生的核心环节，也是多种代谢中间产物的重要来源，通过氧化乙酰辅酶A（Acetyl-CoA）生成高能分子以及二氧化碳。</p>
+                <p>三羧酸循环（TCA循环），发生在线粒体基质中，TCA循环不仅是能量产生的核心环节，也是多种代谢中间产物的重要来源，通过氧化乙酰辅酶A（Acetyl-CoA）生成高能分子以及二氧碳。</p>
 
                 <h4>反应位置</h4>
                 <p>三羧酸循环发生线粒体基质中。</p>
@@ -973,10 +996,10 @@
                 </ol>
 
                 <h4>意义</h4>
-                <p>TCA循环在细胞代谢中具有重要的生理意义：</p>
+                <p>TCA循在细胞代谢中具有重要的生理意义：</p>
                 <ol>
                     <li><strong>三大营养物质氧化分解的共同途径</strong>：碳水化合物经糖酵解生成丙酮酸，脂肪酸β-氧化生成乙酰CoA，氨基酸经脱氨基后的碳骨架，均可通过TCA循环彻底氧化。</li>
-                    <li><strong>中间谢产物供应</strong>：α-酮戊二酸和草酰乙酸可通过转氨基作用合成谷氨酸和天冬氨酸等非必需氨基酸。</li>
+                    <li><strong>中间谢产物供应</strong>：α-酮戊二酸和草酰乙酸可通过转基作用合成氨酸和天冬氨酸等非必需氨基酸。</li>
                     <li><strong>为其他物质代谢提供小分子前体</strong>：琥珀酰CoA用于血红素合成，柠檬酸可用于脂肪酸合成。</li>
                     <li><strong>支持呼吸链功能</strong>：TCA循环生成的NADH和FADH2作为电子传递链的电子供体，驱动氧化磷酸化过程，生成ATP。</li>
                 </ol>
@@ -1013,7 +1036,7 @@
                     <li><strong>血糖调节</strong>：肝脏中的糖原可以在血糖水平下降时分解为葡萄糖，释放到血液中，维持血糖水平的稳定。</li>
                     <li><strong>节约蛋白质和脂肪</strong>：充足的糖原储备可以减少对蛋白质和脂肪的依赖，从而保护蛋白质不被过度消耗，同时避免过多的脂肪分解产生酮体。</li>
                 </ol>
-                <p>糖原合成和分解的精细调控对于维持机体的能量平衡和代谢健康至关重要。</p>
+                <p>糖原合成和分解的精细调控���于维持机体���能量平衡和代谢健康至关重要。</p>
             `,
             "GNG": `
                 <h1>GNG</h1>
@@ -1023,7 +1046,7 @@
                 <p>糖异生（GNG）是生物体内由非碳水化合物底物（如乳酸、甘油和氨基酸）生成葡萄糖的过程。该过程主要在肝脏和肾脏中进行，对于维持血糖水平的稳定至关重要。</p>
 
                 <h4>反应位置</h4>
-                <p>糖异生主要发生在肝脏和肾脏的细胞质和线粒体中。</p>
+                <p>糖异生主要发生在肝脏和肾脏的细胞质和线粒中。</p>
 
                 <h4>关键酶</h4>
                 <p>糖异生途径中，有几个关键的酶是糖酵解途径中没有的，或者说是为了绕过糖酵解中的不可逆步骤而存在的。以下是糖异生的关键酶：</p>
@@ -1068,7 +1091,7 @@
                 <h3>30 ATP 的情况</h3>
                 <p>在一些情况下，特别是在细胞质中产生的NADH通过甘油-3-磷酸穿梭系统进入线粒体时，每个NADH只能产生1.5个ATP而不是2.5个ATP。这导致：</p>
                 <ol>
-                    <li><strong>糖酵解</strong>：2个NADH只能产生3个ATP（而不是5个ATP）</li>
+                    <li><strong>糖酵解</strong>：2NADH只能产生3个ATP（而不是5个ATP）</li>
                     <li><strong>丙酮酸转化和TCA循环</strong>：保持不变，因为这些NADH直接在线粒体中产生</li>
                 </ol>
                 <p>因此总ATP产量为：5 ATP（糖酵解） + 5 ATP（丙酮酸转化） + 20 ATP（TCA循环） = 30 ATP。</p>
@@ -1122,6 +1145,34 @@
                     <li><strong>转变为三酰甘油、氨基酸等</strong></li>
                 </ul>
 
+            `,
+            "GC": `
+                <h1>GC</h1>
+                <h3>乙醛酸循环（Glyoxylate Cycle，GC）</h3>
+
+                <h4>定义</h4>
+                <p>乙醛酸循环是一种变异的三羧酸循环，允许生物体将乙酰辅酶A转化为碳水化合物。这个循环在植物种子发芽和微生物生长于乙酸等简单碳源时特别重要。</p>
+
+                <h4>反应位置</h4>
+                <p>在真核生物中，乙醛酸循环主要发生在过氧体（植物）或乙醛体（真菌）中。</p>
+
+                <h4>关键酶</h4>
+                <p>乙醛酸循环中的关键酶包括：</p>
+                <ol>
+                    <li><strong>异柠檬酸裂解酶（Isocitrate lyase）</strong>：催化异柠檬酸裂解为琥珀酸和乙醛酸，是乙醛酸循环的特征性酶之一。</li>
+                    <li><strong>苹果酸合酶（Malate synthase）</strong>：催化乙醛酸和乙酰辅酶A缩合形成苹果酸，是另一个特征性酶。</li>
+                    <li><strong>苹果酸脱氢酶（Malate dehydrogenase）</strong>：催化苹果酸氧化为草酰乙酸，同时生成NADH。</li>
+                    <li><strong>磷酸烯醇式丙酮酸羧激酶（PEP carboxykinase）</strong>：催化草酰乙酸转化为磷酸烯醇式丙酮酸。</li>
+                </ol>
+
+                <h4>意义</h4>
+                <p>乙醛酸循环具有重要的生理意义：</p>
+                <ol>
+                    <li><strong>脂肪转糖</strong>：使生物体能够利用脂肪或乙酸等二碳化合物合成葡萄糖。</li>
+                    <li><strong>能量效率</strong>：相比TCA循环，乙醛酸循环避免了两个脱羧步骤，保留更多碳骨架用于生物合成。</li>
+                    <li><strong>植物发芽</strong>：在油料植物种子发芽时，帮助将储存的脂肪转化为糖类。</li>
+                    <li><strong>微生物适应</strong>：使微生物能够在乙酸等简单碳源上生长。</li>
+                </ol>
             `
         };
 
@@ -1361,6 +1412,11 @@
                     }
                 });
             });
+        });
+
+        // 添加 GC 按钮的事件监听器
+        document.getElementById('control-GC').addEventListener('click', () => {
+            handlePathwayClick('GC');
         });
     </script>
 </body>
