@@ -206,6 +206,99 @@
         #info-panel::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+        /* 在已有的 style 标签中添加 */
+        #left-control-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+
+        .control-item {
+            margin-bottom: 15px;
+        }
+
+        .control-label {
+            color: #d4d4d4;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        /* 开关样式 */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #4a4a4a;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 24px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        /* 滑块样式 */
+        input[type="range"] {
+            width: 150px;
+            height: 8px;
+            background: #4a4a4a;
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #2196F3;
+            border-radius: 50%;
+            cursor: pointer;
+        }
     </style>
 
 </head>
@@ -217,11 +310,28 @@
         <button id="control-PPP">PPP</button>
         <button id="control-GS">GS</button>
         <button id="control-GNG">GNG</button>
-        <button id="control-Other">Other</button> <!-- 新增 Other 按钮 -->
+        <button id="control-Other">Other</button> <!-- 增 Other 按钮 -->
     </div>
     <div id="info-panel">
         <button id="close-panel">&times;</button>
         <div id="info-panel-content"></div>
+    </div>
+    <div id="left-control-panel">
+        <div class="control-item">
+            <label class="switch">
+                <input type="checkbox" id="highlight-single-arrow">
+                <span class="slider round"></span>
+            </label>
+            <span class="control-label">单向箭头高亮</span>
+        </div>
+        <div class="control-item">
+            <label class="control-label">聚拢程度</label>
+            <input type="range" id="charge-strength" min="0" max="2000" value="1000" step="100">
+        </div>
+        <div class="control-item">
+            <label class="control-label">连线长度</label>
+            <input type="range" id="link-distance" min="50" max="400" value="200" step="10">
+        </div>
     </div>
     <script>
         const data = {
@@ -371,7 +481,7 @@
         // 定义箭头
         const defs = g.append("defs");
         
-        // 定义箭头标记
+        // 定义普通箭头标记
         defs.append("marker")
             .attr("id", "arrow")
             .attr("viewBox", "0 -5 10 10")
@@ -383,6 +493,19 @@
             .append("path")
             .attr("d", "M0,-5L10,0L0,5")
             .attr("class", "arrow");
+
+        // 定义高亮箭头标记
+        defs.append("marker")
+            .attr("id", "arrow-highlighted")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 10)
+            .attr("refY", 0)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M0,-5L10,0L0,5")
+            .style("fill", "#2196F3"); // 高亮箭头颜色
 
         // 创建连接线
         const link = g.append("g")
@@ -667,7 +790,7 @@
 
         // 拖拽函数
         function dragstarted(event) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
+            if (!event.active) simulation.alphaTarget(0.1).restart(); // 从0.3降低到0.1
             event.subject.fx = event.subject.x;
             event.subject.fy = event.subject.y;
         }
@@ -678,7 +801,7 @@
         }
 
         function dragended(event) {
-            if (!event.active) simulation.alphaTarget(0);
+            if (!event.active) simulation.alphaTarget(0); // 保持为0
             event.subject.fx = null;
             event.subject.fy = null;
         }
@@ -758,7 +881,7 @@
                 <h4>意义</h4>
                 <p>磷酸戊糖途径具有重要的生理意义：</p>
                 <ol>
-                    <li><strong>NADPH提供还原力</strong>：NADPH是脂肪酸合成、胆固醇合成等还原性生物合成过程的重要电子供体，同时通过维持谷胱甘肽的还原状态（GSH）保护细胞免受氧化损伤。</li>
+                    <li><strong>NADPH提供还原力</strong>：NADPH是脂肪酸合成、胆固醇合成等还原性生物合成过程的重要电子供体，同时通过维持谷胱甘肽的还状态（GSH）护细胞免受氧化损伤。</li>
                     <li><strong>核糖-5-磷酸供应</strong>：核糖-5-磷酸是核苷酸和核酸合成的必需前体，特别是在快速分裂的细胞中（如骨髓细胞和癌细胞）尤为重要。</li>
                     <li><strong>支持其他代谢途径</strong>：PPP的中间产物可以进入糖酵解途径，支持能量代谢和生物合成过程。</li>
                 </ol>
@@ -832,7 +955,7 @@
                 <h4>意义</h4>
                 <p>糖原合成具有重要的生理意义：</p>
                 <ol>
-                    <li><strong>能量储备</strong>：糖原作为葡萄糖的储存形式，可以在需要时快速动员提供能量，特别是在肌肉活动和禁食状态下。</li>
+                    <li><strong>能量储备</strong>：糖原作���葡萄糖的储���形式，可以在需要时快速动员提供能量，特别是在肌肉活动和禁食状态下。</li>
                     <li><strong>血糖调节</strong>：肝脏中的糖原可以在血糖水平下降时分解为葡萄糖，释放到血液中，维持血糖水平的稳定。</li>
                     <li><strong>节约蛋白质和脂肪</strong>：充足的糖原储备可以减少对蛋白质和脂肪的依赖，从而保护蛋白质不被过度消耗，同时避免过多的脂肪分解产生酮体。</li>
                 </ol>
@@ -926,7 +1049,7 @@
                 <ul>
                     <li><strong>糖原磷酸化酶（Glycogen Phosphorylase）</strong>：糖原磷酸化酶将糖原的α-1,4糖苷键水，生成葡萄糖-1-磷酸。</li>
                     <li><strong>糖原变位酶（Glycogen Debranching Enzyme）</strong>：当糖原链上的分支点处发生支链时，糖原变位酶会将支链的α-1,6糖苷键水解，生成葡萄糖。</li>
-                    <li><strong>葡萄糖-6-磷酸酶（Glucose-6-Phosphatase）</strong>：在肝脏中，葡萄糖-6-磷酸酶将葡萄糖-6-磷酸水解为葡萄糖，并释放到血液中，供机体利用。</li>
+                    <li><strong>葡萄糖-6-磷酸酶（Glucose-6-Phosphatase）</strong>：在肝脏中，葡萄糖-6-磷酸酶葡萄糖-6-磷水解为葡萄糖，并释放到血液中，供机体利用。</li>
                 </ul>
 
                 <h3>3. 纤维素的酶促水解</h3>
@@ -936,7 +1059,7 @@
                 </ul>
 
                 <h3>总结</h3>
-                <p>这些水解反应是糖类代谢的重要组成部分，分别为细胞提供能量或作为细胞壁和储存形式的糖源。</p>
+                <p>这些水解反应是糖类代谢的重要组成部分，分别为细胞提能量或作为细胞壁储存形式的糖源。</p>
             `
         };
 
@@ -1100,6 +1223,39 @@
         // 新增 Other 按钮的事件监听器
         document.getElementById('control-Other').addEventListener('click', () => {
             handlePathwayClick('Other');
+        });
+
+        // 在创建力导向图后添加以下代码
+        // 单箭头高亮控制
+        document.getElementById('highlight-single-arrow').addEventListener('change', function(e) {
+            const singleArrowLinks = link.filter(d => !d.double);
+            if (e.target.checked) {
+                singleArrowLinks.style('stroke', '#2196F3')
+                               .style('stroke-width', '3px')
+                               .attr("marker-end", "url(#arrow-highlighted)");
+            } else {
+                singleArrowLinks.style('stroke', '#4a4a4a')
+                               .style('stroke-width', '2px')
+                               .attr("marker-end", "url(#arrow)");
+            }
+        });
+
+        // 聚拢程度控制
+        document.getElementById('charge-strength').addEventListener('input', function(e) {
+            const strength = -e.target.value;
+            simulation.force('charge', d3.forceManyBody().strength(strength))
+                     .alpha(0.3)
+                     .restart();
+        });
+
+        // 连线长度控制
+        document.getElementById('link-distance').addEventListener('input', function(e) {
+            const distance = +e.target.value;
+            simulation.force('link', d3.forceLink(data.links)
+                .id(d => d.id)
+                .distance(distance))
+                .alpha(0.3)
+                .restart();
         });
     </script>
 </body>
