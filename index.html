@@ -948,63 +948,73 @@
             // 设置当前点击节点的激活状态
             node.filter(d => d.id === clickedGroup).classed("active", true);
 
-            // 定义不需要半透明的路径组
-            const keepOpaqueGroups = ["PPP", "Glycogenesis", "EMP"];
+            // 找出当前通路的最远端节点
+            const terminalNodes = data.nodes.filter(n => {
+                if (n.group !== clickedGroup) return false;
+                // 计算与该节点相连的同组节点数量
+                const connections = data.links.filter(l => 
+                    (l.source.id === n.id || l.target.id === n.id) &&
+                    (l.source.group === clickedGroup && l.target.group === clickedGroup)
+                ).length;
+                // 如果只有一个连接，说明是端点
+                return connections <= 1;
+            }).map(n => n.id);
 
-            // 更新所有元素的可见性
-            if (keepOpaqueGroups.includes(clickedGroup)) {
-                // 如果是 PPP、糖原合成或 EMP，保持 G-6-P 相关的节点和连接不透明
-                node.style("opacity", d => {
-                    // G-6-P 始终保持不透明
-                    if (d.id === "Glucose-6-Phosphate") return 1;
-                    // 当前点击组的节点保持不透明
-                    return d.group === clickedGroup ? 1 : 0.1;
+            // 找出与最远端节点直接相连的其他通路节点
+            const connectedNodes = new Set();
+            terminalNodes.forEach(nodeId => {
+                data.links.forEach(l => {
+                    if (l.source.id === nodeId && l.source.group !== l.target.group) {
+                        connectedNodes.add(l.target.id);
+                    }
+                    if (l.target.id === nodeId && l.source.group !== l.target.group) {
+                        connectedNodes.add(l.source.id);
+                    }
                 });
-                
-                link.style("opacity", d => {
-                    // 如果连接涉及 G-6-P，保持不透明
-                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
-                    // 当前点击组的连接保持不透明
+            });
+
+            // 更新节点的透明度
+            node.style("opacity", d => {
+                if (d.group === clickedGroup) return 1;
+                if (connectedNodes.has(d.id)) return 1;
+                return 0.1;
+            });
+
+            // 更新连接线的透明度
+            link.style("opacity", d => {
+                // 如果连接的任一端是最远端节点或其直接相连节点
+                if (terminalNodes.includes(d.source.id) || terminalNodes.includes(d.target.id) ||
+                    connectedNodes.has(d.source.id) || connectedNodes.has(d.target.id)) {
+                    return 1;
+                }
+                return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+            });
+
+            doubleLink.style("opacity", d => {
+                if (terminalNodes.includes(d.source.id) || terminalNodes.includes(d.target.id) ||
+                    connectedNodes.has(d.source.id) || connectedNodes.has(d.target.id)) {
+                    return 1;
+                }
+                return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
+            });
+
+            // 更新标签的透明度
+            const updateLabelOpacity = (labelSelection) => {
+                labelSelection.style("opacity", d => {
+                    if (terminalNodes.includes(d.source.id) || terminalNodes.includes(d.target.id) ||
+                        connectedNodes.has(d.source.id) || connectedNodes.has(d.target.id)) {
+                        return 1;
+                    }
                     return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
                 });
-                
-                doubleLink.style("opacity", d => {
-                    // 如果连接涉及 G-6-P，保持不透明
-                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
-                    // 当前点击组的连接保持不透明
-                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
-                });
-                
-                // 标签的透明度也相应调整
-                linkLabels.style("opacity", d => {
-                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
-                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
-                });
-                
-                empLinkLabels.style("opacity", d => {
-                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
-                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
-                });
-                
-                pppLinkLabels.style("opacity", d => {
-                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
-                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
-                });
-                
-                glycogenesisLinkLabels.style("opacity", d => {
-                    if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
-                    return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
-                });
-            } else {
-                // 其他路径保持原有的半透明效果
-                node.style("opacity", d => d.group === clickedGroup ? 1 : 0.1);
-                link.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-                doubleLink.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-                linkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-                empLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-                pppLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-                glycogenesisLinkLabels.style("opacity", d => (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1);
-            }
+            };
+
+            // 应用到所有标签
+            updateLabelOpacity(linkLabels);
+            updateLabelOpacity(empLinkLabels);
+            updateLabelOpacity(pppLinkLabels);
+            updateLabelOpacity(glycogenesisLinkLabels);
+            updateLabelOpacity(gngLinkLabels);
 
             // 显示信息面板
             const infoPanel = document.getElementById('info-panel');
@@ -1014,12 +1024,6 @@
                 infoPanelContent.innerHTML = pathwayInfo[clickedGroup];
                 infoPanel.classList.add('active');
             }
-
-            // 加 GNG 标签的透明度处理
-            gngLinkLabels.style("opacity", d => {
-                if (d.source.id === "Glucose-6-Phosphate" || d.target.id === "Glucose-6-Phosphate") return 1;
-                return (d.source.group === clickedGroup || d.target.group === clickedGroup) ? 1 : 0.1;
-            });
         }
 
         // 添加关闭面板的事件监听器
