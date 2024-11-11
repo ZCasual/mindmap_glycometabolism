@@ -950,7 +950,7 @@
                 <p>糖酵解途径具有重要的生理意义：</p>
                 <ol>
                     <li><strong>快速能量供应</strong>：糖酵解是无氧条件下（如剧烈运动时）快速提供能量的主途径，能够迅速生成ATP以满足细胞的能量需求。</li>
-                    <li><strong>有氧代谢前体</strong>：糖酵生成的丙酮酸可以进入线粒���，进一步参与有氧呼吸，生成更多的ATP。</li>
+                    <li><strong>有氧代谢前体</strong>：糖酵生成的丙酮酸可以进入线粒，进一步参与有氧呼吸，生成更多的ATP。</li>
                     <li><strong>中间代谢产物</strong>：糖酵解途径的中间产物可以用于其他代谢途径，如磷酸戊糖途径、氨基酸合成等。</li>
                     <li><strong>维持氧化还原平衡</strong>：糖酵解过程中生成的NADH需要通过乳酸发酵或其他途径重新氧化为NAD+，以维持细胞内的氧化还原平衡。</li>
                 </ol>
@@ -958,7 +958,7 @@
             `,
             "PPP": `
                 <h1>PPP</h1>
-                <h3>磷酸戊糖途径（Pentose Phosphate Pathway，PPP）</h3>
+                <h3>磷��戊糖途径（Pentose Phosphate Pathway，PPP）</h3>
 
                 <h4>定义</h4>
                 <p>磷酸戊糖途（PPP），是一种在细质中进行的代谢途径。该途径的主要功能是生成核苷酸合成所需的核糖-5-磷酸和维持细胞内还原型谷胱甘肽的水平。PPP分为两个阶段：氧化阶段和非氧化阶段。氧化阶段生成NADPH，而非氧化阶段则涉及糖磷酸的相互转化以生成核糖-5-磷酸。</p>
@@ -1061,7 +1061,7 @@
                     <li><strong>血糖调节</strong>：肝脏中的糖原可以在血糖水平下降时分解为葡萄糖，释放到血液中，维持血糖水平的稳定。</li>
                     <li><strong>节约蛋白质和脂肪</strong>：充足的糖原储备可以减少对蛋白质和脂肪的依赖，从而保护蛋白质不被过度消耗，同时避免过多的脂肪分解产生酮体。</li>
                 </ol>
-                <p>糖原合成和分解的精细调控���于维持机体���能量平衡和代谢健康至关重要。</p>
+                <p>糖原合成和分解的精细调控于维持机体能量平衡和代谢健康至关重要。</p>
             `,
             "GNG": `
                 <h1>GNG</h1>
@@ -1074,7 +1074,7 @@
                 <p>糖异生主要发生在肝脏和肾脏的细胞质和线粒中。</p>
 
                 <h4>关键酶</h4>
-                <p>糖异生途径中，有几个关键的酶是糖酵解途径中没有的，或者说是为了绕过糖酵解中的不可逆步骤而存在的。以下是糖异生的关键酶：</p>
+                <p>糖异生途径中，有几个关键的酶是糖酵解途径中没��的，或者说是为了绕过糖酵解中的不可逆步骤而存在的。以下是糖异生的关键酶：</p>
                 <ol>
                     <li><strong>丙酮酸羧化酶（Pyruvate Carboxylase, PC）</strong>：PC的活性受到ADP的抑制，而乙酰辅酶A则显著激活PC，增强糖异生途径起始阶段的活性。</li>
                     <li><strong>磷酸烯醇式丙酮酸羧激酶（PEPCK）</strong>：PEPCK在糖异生中也是限速酶，其活性受ADP抑制，而高浓度的葡萄糖-6-磷酸则有助于增强其活性，推进糖异生过程。</li>
@@ -1266,16 +1266,25 @@
             // 更新标签的透明度
             const updateLabelOpacity = (labelSelection) => {
                 labelSelection.style("opacity", d => {
-                    // 如果是当前通路内的标签，保持完全不透明
+                    // 如果是 GC 通路，检查特定的酶标签
+                    if (clickedGroup === 'GC') {
+                        const enzymeText = labelSelection.filter(l => l === d).text();
+                        if (enzymeText === '[苹果酸脱氢酶, NAD⁺ -> NADH]' ||
+                            enzymeText === '[异柠檬酸裂解酶]' ||
+                            enzymeText === '[苹果酸合酶]' ||
+                            enzymeText === '[磷酸烯醇式丙酮酸羧激酶, GDP->GTP, CO₂]') {
+                            return 1; // 保持完全不透明
+                        }
+                    }
+
+                    // 保持原有的透明度逻辑
                     if (d.source.group === clickedGroup && d.target.group === clickedGroup) {
                         return 1;
                     }
-                    // 如果是与末端节点相连的标签，设置为半透明
                     if (terminalNodes.includes(d.source.id) || terminalNodes.includes(d.target.id) ||
                         connectedNodes.has(d.source.id) || connectedNodes.has(d.target.id)) {
-                        return 0.5;  // 设置为半透明
+                        return 0.5;
                     }
-                    // 其他标签保持低透明度
                     return 0.1;
                 });
             };
