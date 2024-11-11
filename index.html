@@ -361,6 +361,13 @@
             <span class="control-label">自动显示信息</span>
         </div>
         <div class="control-item">
+            <label class="switch">
+                <input type="checkbox" id="highlight-energy">
+                <span class="slider round"></span>
+            </label>
+            <span class="control-label">高能分子高亮</span>
+        </div>
+        <div class="control-item">
             <label class="control-label">聚拢程度</label>
             <input type="range" id="charge-strength" min="0" max="2000" value="1000" step="100">
         </div>
@@ -962,7 +969,7 @@
                     <li><strong>为其他物质代谢提供小分子前体</strong>：琥珀酰CoA用于血红素合成，柠檬酸可用于脂肪酸合成。</li>
                     <li><strong>支持呼吸链功能</strong>：TCA循环生成的NADH和FADH2作为电子传递链的电子供体，驱动氧化磷酸化过程，生成ATP。</li>
                 </ol>
-                <p>TCA循环是细胞代谢的枢纽，不仅是能量产生的主要途径，也是多种生物合成反应的重要中间产物来源。</p>
+                <p>TCA循环是细胞代谢的枢纽��不仅是能量产生的主要途径，也是多种生物合成反应的重要中间产物来源。</p>
             `,
             "GS": `
                 <h1>GS</h1>
@@ -1028,7 +1035,7 @@
                 <ol>
                     <li><strong>维持血糖水平稳定</strong>：在饥饿状态下维持血糖浓度在3.89-5.11mmol/L范围内，即使禁食数周也可保持在3.40mmol/L左右。这对于依赖葡萄糖供能的组织(如脑、肌肉、血细胞等)的功能至关重要。</li>
                     <li><strong>Cori循环</strong>：在剧烈运动时，肌肉通过无氧糖酵解产生大量乳酸，乳酸经血液运输到肝脏进行糖异生，既可防止乳酸酸中毒，又能回收能量并更新肌糖原。</li>
-                    <li><strong>协助��基酸代谢</strong>：在禁食晚期、糖尿病或皮质醇过多时，组织蛋白质分解增加，血浆氨基酸水平升高，此时糖异生可作为氨基酸代谢的重要途径。</li>
+                    <li><strong>协助基酸代谢</strong>：在禁食晚期、糖尿病或皮质醇过多时，组织蛋白质分解增加，血浆氨基酸水平升高，此时糖异生可作为氨基酸代谢的重要途径。</li>
                     <li><strong>促进肾脏排氢保钠</strong>：在长期禁食导致的代谢性酸中毒中，肾脏糖异生增强可促进肾小管泌氨，有助于维持酸碱平衡。</li>
                 </ol>
                 <p>糖异生通过消耗能量和利用非糖底物，确保机体在不同生理和病理状态下能够持续获得葡萄糖。</p>
@@ -1302,6 +1309,33 @@
             leftControlPanel.classList.toggle('collapsed');
             // 更新按钮文本
             toggleButton.textContent = leftControlPanel.classList.contains('collapsed') ? '▶' : '◀';
+        });
+
+        // 添加高能分子高亮控制
+        document.getElementById('highlight-energy').addEventListener('change', function(e) {
+            const allLabels = [linkLabels, empLinkLabels, pppLinkLabels, glycogenesisLinkLabels, gngLinkLabels];
+            const energyKeywords = ['ATP', 'ADP', 'GTP', 'GDP', 'NADH', 'NAD', 'FADH'];
+            
+            allLabels.forEach(labelGroup => {
+                labelGroup.each(function() {
+                    const label = d3.select(this);
+                    const text = label.text();
+                    
+                    if (e.target.checked) {
+                        // 检查标签是否包含任何高能分子关键词
+                        if (energyKeywords.some(keyword => text.includes(keyword))) {
+                            label.style('fill', '#FFC107')  // 使用金黄色高亮
+                                 .style('font-weight', 'bold')
+                                 .style('font-size', '16px');
+                        }
+                    } else {
+                        // 恢复原始样式
+                        label.style('fill', '#FFFFFF')
+                             .style('font-weight', 'normal')
+                             .style('font-size', '14px');
+                    }
+                });
+            });
         });
     </script>
 </body>
