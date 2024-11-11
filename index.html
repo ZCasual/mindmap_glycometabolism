@@ -354,6 +354,13 @@
             <span class="control-label">单向箭头高亮</span>
         </div>
         <div class="control-item">
+            <label class="switch">
+                <input type="checkbox" id="auto-show-info" checked>
+                <span class="slider round"></span>
+            </label>
+            <span class="control-label">自动显示信息</span>
+        </div>
+        <div class="control-item">
             <label class="control-label">聚拢程度</label>
             <input type="range" id="charge-strength" min="0" max="2000" value="1000" step="100">
         </div>
@@ -812,7 +819,7 @@
             pppLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
                          .attr("y", d => (d.source.y + d.target.y) / 2);
 
-            // ��新糖原生成途径的连接线标签位置
+            // 新糖原生成途径的连接线标签位置
             glycogenesisLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
                                  .attr("y", d => (d.source.y + d.target.y) / 2);
         });
@@ -1009,7 +1016,7 @@
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
-                <p>从丙酮酸到葡萄糖的糖异生过程中ATP的消耗：</p>
+                <p>从丙���酸到葡萄糖的糖异生过程中ATP的消耗：</p>
                 <ol>
                     <li><strong>消耗</strong>：6 ATP</li>
                     <li><strong>生成</strong>：无</li>
@@ -1077,7 +1084,7 @@
                 <p>糖原是动物储存的多糖，主要存在于肝脏和肌肉中，其水解过程帮助细胞迅速获取葡萄糖作为能量来源。</p>
                 <ul>
                     <li><strong>糖原磷酸化酶（Glycogen Phosphorylase）</strong>：糖原磷酸化酶将糖原的α-1,4糖苷键水，生成葡萄糖-1-磷酸。</li>
-                    <li><strong>糖原变位酶（Glycogen Debranching Enzyme）</strong>：当糖原链上的分支点处发生支链时，糖原变位酶会将支链的��-1,6糖苷键水解，生成葡萄糖。</li>
+                    <li><strong>糖原变位酶（Glycogen Debranching Enzyme）</strong>：当糖原链上的分支点处发生支链时，糖原变位酶会将支链的-1,6糖苷键水解，生成葡萄糖。</li>
                     <li><strong>葡萄糖-6-磷酸酶（Glucose-6-Phosphatase）</strong>：在肝脏中，葡萄糖-6-磷酸酶葡萄糖-6-磷水解为葡萄糖，并释放到血液中，供机体利用。</li>
                 </ul>
 
@@ -1170,10 +1177,14 @@
             // 显示信息面板
             const infoPanel = document.getElementById('info-panel');
             const infoPanelContent = document.getElementById('info-panel-content');
+            const autoShowInfo = document.getElementById('auto-show-info').checked;
             
             if (pathwayInfo[clickedGroup]) {
                 infoPanelContent.innerHTML = pathwayInfo[clickedGroup];
-                infoPanel.classList.add('active');
+                // 只有在自动显示开关打开时才显示信息面板
+                if (autoShowInfo) {
+                    infoPanel.classList.add('active');
+                }
             }
         }
 
