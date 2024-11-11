@@ -299,6 +299,34 @@
             border-radius: 50%;
             cursor: pointer;
         }
+
+        /* 添加左侧控制面板的收起/展开状态样式 */
+        #left-control-panel {
+            transition: transform 0.3s ease;
+        }
+
+        #left-control-panel.collapsed {
+            transform: translateX(-100%);
+        }
+
+        /* 添加展开/收起按钮样式 */
+        #toggle-control-panel {
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2d2d2d;
+            border: none;
+            color: #d4d4d4;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 0 4px 4px 0;
+            font-size: 16px;
+        }
+
+        #toggle-control-panel:hover {
+            background: #3d3d3d;
+        }
     </style>
 
 </head>
@@ -317,6 +345,7 @@
         <div id="info-panel-content"></div>
     </div>
     <div id="left-control-panel">
+        <button id="toggle-control-panel">◀</button>
         <div class="control-item">
             <label class="switch">
                 <input type="checkbox" id="highlight-single-arrow">
@@ -783,7 +812,7 @@
             pppLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
                          .attr("y", d => (d.source.y + d.target.y) / 2);
 
-            // 更新糖原生成途径的连接线标签位置
+            // ��新糖原生成途径的连接线标签位置
             glycogenesisLinkLabels.attr("x", d => (d.source.x + d.target.x) / 2)
                                  .attr("y", d => (d.source.y + d.target.y) / 2);
         });
@@ -955,7 +984,7 @@
                 <h4>意义</h4>
                 <p>糖原合成具有重要的生理意义：</p>
                 <ol>
-                    <li><strong>能量储备</strong>：糖原作���葡萄糖的储���形式，可以在需要时快速动员提供能量，特别是在肌肉活动和禁食状态下。</li>
+                    <li><strong>能量储备</strong>：糖原作葡萄糖的储形式，可以在需要时快速动员提供能量，特别是在肌肉活动和禁食状态下。</li>
                     <li><strong>血糖调节</strong>：肝脏中的糖原可以在血糖水平下降时分解为葡萄糖，释放到血液中，维持血糖水平的稳定。</li>
                     <li><strong>节约蛋白质和脂肪</strong>：充足的糖原储备可以减少对蛋白质和脂肪的依赖，从而保护蛋白质不被过度消耗，同时避免过多的脂肪分解产生酮体。</li>
                 </ol>
@@ -1048,7 +1077,7 @@
                 <p>糖原是动物储存的多糖，主要存在于肝脏和肌肉中，其水解过程帮助细胞迅速获取葡萄糖作为能量来源。</p>
                 <ul>
                     <li><strong>糖原磷酸化酶（Glycogen Phosphorylase）</strong>：糖原磷酸化酶将糖原的α-1,4糖苷键水，生成葡萄糖-1-磷酸。</li>
-                    <li><strong>糖原变位酶（Glycogen Debranching Enzyme）</strong>：当糖原链上的分支点处发生支链时，糖原变位酶会将支链的α-1,6糖苷键水解，生成葡萄糖。</li>
+                    <li><strong>糖原变位酶（Glycogen Debranching Enzyme）</strong>：当糖原链上的分支点处发生支链时，糖原变位酶会将支链的��-1,6糖苷键水解，生成葡萄糖。</li>
                     <li><strong>葡萄糖-6-磷酸酶（Glucose-6-Phosphatase）</strong>：在肝脏中，葡萄糖-6-磷酸酶葡萄糖-6-磷水解为葡萄糖，并释放到血液中，供机体利用。</li>
                 </ul>
 
@@ -1151,16 +1180,7 @@
         // 添加关闭面板的事件监听器
         document.getElementById('close-panel').addEventListener('click', () => {
             document.getElementById('info-panel').classList.remove('active');
-            // 重置所有元素的显示
-            node.style("opacity", 1);
-            link.style("opacity", 1);
-            doubleLink.style("opacity", 1);
-            linkLabels.style("opacity", 1);
-            empLinkLabels.style("opacity", 1);
-            pppLinkLabels.style("opacity", 1);
-            glycogenesisLinkLabels.style("opacity", 1);
-            gngLinkLabels.style("opacity", 1);
-            node.classed("active", false);
+            // 不再重置显示状态
         });
 
         // 修改 GNG 途径的连接标签定义
@@ -1256,6 +1276,16 @@
                 .distance(distance))
                 .alpha(0.3)
                 .restart();
+        });
+
+        // 添加左侧控制面板的展开/收起功能
+        const leftControlPanel = document.getElementById('left-control-panel');
+        const toggleButton = document.getElementById('toggle-control-panel');
+        
+        toggleButton.addEventListener('click', () => {
+            leftControlPanel.classList.toggle('collapsed');
+            // 更新按钮文本
+            toggleButton.textContent = leftControlPanel.classList.contains('collapsed') ? '▶' : '◀';
         });
     </script>
 </body>
