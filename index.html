@@ -734,11 +734,11 @@
             .style("fill", "#FFFFFF")
             .text(d => {
                 if (d.source === "Isocitrate" && d.target === "Glyoxylate") {
-                    return "[异柠檬酸裂解酶]";
+                    return "[异柠檬酸裂解酶, FAD -> FADH₂]";
                 } else if (d.source === "Glyoxylate" && d.target === "Malate") {
                     return "[苹果酸合酶]";
                 } else if (d.source === "OAA" && d.target === "PEP_GC") {
-                    return "[磷酸烯醇式丙酮酸羧激酶, GDP->GTP, CO₂]";
+                    return "[磷酸烯醇式丙酮酸羧激酶, GDP -> GTP, CO₂]";
                 }
                 return "";
             });
@@ -958,7 +958,7 @@
             `,
             "PPP": `
                 <h1>PPP</h1>
-                <h3>磷��戊糖途径（Pentose Phosphate Pathway，PPP）</h3>
+                <h3>磷戊糖途径（Pentose Phosphate Pathway，PPP）</h3>
 
                 <h4>定义</h4>
                 <p>磷酸戊糖途（PPP），是一种在细质中进行的代谢途径。该途径的主要功能是生成核苷酸合成所需的核糖-5-磷酸和维持细胞内还原型谷胱甘肽的水平。PPP分为两个阶段：氧化阶段和非氧化阶段。氧化阶段生成NADPH，而非氧化阶段则涉及糖磷酸的相互转化以生成核糖-5-磷酸。</p>
@@ -1074,7 +1074,7 @@
                 <p>糖异生主要发生在肝脏和肾脏的细胞质和线粒中。</p>
 
                 <h4>关键酶</h4>
-                <p>糖异生途径中，有几个关键的酶是糖酵解途径中没��的，或者说是为了绕过糖酵解中的不可逆步骤而存在的。以下是糖异生的关键酶：</p>
+                <p>糖异生途径中，有几个关键的酶是糖酵解途径中没的，或者说是为了绕过糖酵解中的不可逆步骤而存在的。以下是糖异生的关键酶：</p>
                 <ol>
                     <li><strong>丙酮酸羧化酶（Pyruvate Carboxylase, PC）</strong>：PC的活性受到ADP的抑制，而乙酰辅酶A则显著激活PC，增强糖异生途径起始阶段的活性。</li>
                     <li><strong>磷酸烯醇式丙酮酸羧激酶（PEPCK）</strong>：PEPCK在糖异生中也是限速酶，其活性受ADP抑制，而高浓度的葡萄糖-6-磷酸则有助于增强其活性，推进糖异生过程。</li>
@@ -1169,7 +1169,6 @@
                     <li><strong>合成糖原储存</strong></li>
                     <li><strong>转变为三酰甘油、氨基酸等</strong></li>
                 </ul>
-
             `,
             "GC": `
                 <h1>GC</h1>
@@ -1188,6 +1187,14 @@
                     <li><strong>苹果酸合酶（Malate synthase）</strong>：催化乙醛酸和乙酰辅酶A缩合形成苹果酸，是另一个特征性酶。</li>
                     <li><strong>苹果酸脱氢酶（Malate dehydrogenase）</strong>：催化苹果酸氧化为草酰乙酸，同时生成NADH。</li>
                     <li><strong>磷酸烯醇式丙酮酸羧激酶（PEP carboxykinase）</strong>：催化草酰乙酸转化为磷酸烯醇式丙酮酸。</li>
+                </ol>
+
+                <h4>总能量（ATP）计算过程</h4>
+                <p>乙醛酸循环中ATP的生成和消耗：</p>
+                <ol>
+                    <li><strong>消耗</strong>：每转化2个乙酰CoA需消耗1个ATP</li>
+                    <li><strong>生成</strong>：每循环产生1个NADH（2.5 ATP）</li>
+                    <li><strong>总计</strong>：每完整循环净生成1.5 ATP</li>
                 </ol>
 
                 <h4>意义</h4>
@@ -1269,10 +1276,18 @@
                     // 如果是 GC 通路，检查特定的酶标签
                     if (clickedGroup === 'GC') {
                         const enzymeText = labelSelection.filter(l => l === d).text();
+                        // 检查是否为 GC 相关的特定酶标签
                         if (enzymeText === '[苹果酸脱氢酶, NAD⁺ -> NADH]' ||
-                            enzymeText === '[异柠檬酸裂解酶]' ||
+                            enzymeText === '[异柠檬酸裂解酶, FAD -> FADH₂]' ||
                             enzymeText === '[苹果酸合酶]' ||
-                            enzymeText === '[磷酸烯醇式丙酮酸羧激酶, GDP->GTP, CO₂]') {
+                            enzymeText === '[磷酸烯醇式丙酮酸羧激酶, GDP -> GTP, CO₂]') {
+                            return 1; // 保持完全不透明
+                        }
+                        
+                        // 检查是否为 GC 相关的特定连接
+                        if ((d.source.id === "Isocitrate" && d.target.id === "Glyoxylate") ||
+                            (d.source.id === "Glyoxylate" && d.target.id === "Malate") ||
+                            (d.source.id === "OAA" && d.target.id === "PEP_GC")) {
                             return 1; // 保持完全不透明
                         }
                     }
