@@ -232,6 +232,7 @@
                 { id: "TCA", label: "TCA", group: "TCA" },
                 { id: "GS", label: "GS", group: "GS" },
                 { id: "GNG", label: "GNG", group: "GNG" },
+                { id: "DOG", label: "🥵", group: "DOG" },
 
                 // EMP 途径节点
                 { id: "Glucose", label: "葡萄糖", group: "EMP" },
@@ -286,9 +287,11 @@
                 { id: "Glycogen", label: "糖原", group: "GS" }
             ],
             links: [
+                { source: "DOG", target: "EMP", double: true },  // 狗链
+                { source: "DOG", target: "Glucose", double: true },  // 狗链
                 { source: "GS", target: "EMP", double: true },
                 { source: "EMP", target: "TCA", double: false },
-                { source: "TCA", target: "PPP", double: false },
+                { source: "PPP", target: "EMP", double: true },
                 { source: "EMP", target: "GNG", double: true },
                 { source: "GS", target: "GS", double: false },
                 { source: "AcetylCoA", target: "OAA", double: false },
@@ -362,8 +365,8 @@
 
         // 添加颜色比例尺
         const color = d3.scaleOrdinal()
-            .domain(["EMP", "TCA", "PPP", "GS", "GNG"])
-            .range(["#4CAF50", "#FF5722", "#2196F3", "#9C27B0", "#FFC107"]);
+            .domain(["EMP", "TCA", "PPP", "GS", "GNG", "DOG"])  // 添加 DOG 到域中
+            .range(["#4CAF50", "#FF5722", "#2196F3", "#9C27B0", "#FFC107", "#1f2623"]);  // 添加 DOG 的颜色
 
         // 定义箭头
         const defs = g.append("defs");
@@ -412,7 +415,7 @@
             .style("fill", "#FFFFFF")
             .text(d => {
                 if (d.source === "Glucose" && d.target === "Glucose-6-Phosphate") {
-                    return "[己糖激酶/葡萄糖激酶, ATP -> ADP]";
+                    return "[己糖激酶, ATP -> ADP]";
                 } else if (d.source === "OAA" && d.target === "Citrate") {
                     return "[柠檬酸合酶, +H₂O]";
                 } else if (d.source === "Citrate" && d.target === "Aconitate") {
@@ -512,7 +515,7 @@
             .style("fill", "#FFFFFF")
             .text(d => {
                 if (d.source === "Glucose" && d.target === "Glucose-6-Phosphate") {
-                    return "[己糖激酶/葡萄糖激酶, ATP -> ADP]";
+                    return "[己糖激酶, ATP -> ADP]";
                 } else if (d.source === "Glucose-6-Phosphate" && d.target === "Glucose1P") {
                     return "[磷酸葡萄糖变位酶]";
                 } else if (d.source === "Glucose1P" && d.target === "UDPGlucose") {
