@@ -132,9 +132,10 @@
             height: 15%;
             background-color: #2d2d2d;
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;  /* 改为 flex-start */
             align-items: center;
             padding: 10px;
+            padding-left: 50px;  /* 添加左边距 */
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
         }
 
@@ -710,29 +711,12 @@
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
-                <p>在糖酵解过程中，每分子葡萄糖转化为两分子丙酮酸，生成ATP和NADH。具体能量计算如下：</p>
+                <p>糖酵解途径中ATP的生成和消耗：</p>
                 <ol>
-                    <li><strong>消耗ATP的步骤</strong>：
-                        <ul>
-                            <li>葡萄糖磷酸化为葡萄糖-6-磷酸：消耗1个ATP。</li>
-                            <li>果糖-6-磷酸磷酸化为果糖-1,6-二磷酸：消耗1个ATP。</li>
-                        </ul>
-                        <p>因此，糖酵解途径中总共消耗2个ATP。</p>
-                    </li>
-                    <li><strong>生成ATP的步骤</strong>：
-                        <ul>
-                            <li>1,3-二磷酸甘油酸转化为3-磷酸甘油酸：生成1个ATP（每分子葡萄糖生成2个1,3-二磷酸甘油酸，因此共生成2个ATP）。</li>
-                            <li>磷酸烯醇式丙酮酸转化为丙酮酸：生成1个ATP（每分子葡萄糖生成2个磷酸烯醇式丙酮酸，因此共生成2个ATP）。</li>
-                        </ul>
-                        <p>因此，糖酵解途径中总共生成4个ATP。</p>
-                    </li>
-                    <li><strong>NADH生成</strong>：
-                        <ul>
-                            <li>甘油醛-3-磷酸氧化为1,3-二磷酸甘油酸：生成1个NADH（每分子葡萄糖生成2个甘油醛-3-磷酸，因此共生成2个NADH）。</li>
-                        </ul>
-                    </li>
+                    <li><strong>消耗</strong>：2 ATP</li>
+                    <li><strong>生成</strong>：4 ATP + 2 NADH（约 5 ATP 等效）</li>
+                    <li><strong>总计</strong>：7 ATP</li>
                 </ol>
-                <p>综合以上，糖酵解途径净生成2个ATP和2个NADH。</p>
 
                 <h4>意义</h4>
                 <p>糖酵解途径具有重要的生理意义：</p>
@@ -761,11 +745,11 @@
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
-                <p>磷酸戊糖途径本身不直接生成ATP，而是通过生成NADPH提供还原力，间接支持其他合成代谢过程。然而，通过该途径生成的中间产物可以进入糖酵解途径，间接生成ATP。</p>
+                <p>磷酸戊糖途径中的能量生成：</p>
                 <ol>
-                    <li><strong>NADPH生成</strong>：每分子葡萄糖-6-磷酸进入PPP的氧化阶段，生成2分子NADPH。</li>
-                    <li><strong>核糖-5-磷酸生成</strong>：每分子葡萄糖-6-磷酸通过PPP可以生成1分子核糖-5-磷酸，用于核苷酸和核酸的合成。</li>
-                    <li><strong>中间产物进入糖酵解</strong>：如果核糖-5-磷酸不需要用于核酸合成，它可以通过非氧化阶段的糖磷酸转化重新进入糖酵解途径，生成ATP。例如，核糖-5-磷酸可以转化为果糖-6-磷酸和甘油醛-3-磷酸，进入糖酵解途径。</li>
+                    <li><strong>消耗</strong>：无直接消耗</li>
+                    <li><strong>生成</strong>：2 NADPH（不转化为ATP，用于还原作用）</li>
+                    <li><strong>总计</strong>：无ATP直接生成</li>
                 </ol>
 
                 <h4>意义</h4>
@@ -797,34 +781,17 @@
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
-                <p>在TCA循环中，每一分子乙酰辅酶A被完全氧化，生成高能分子NADH、FADH2和GTP。这些高能分子随后进入电子传递链（ETC），最终生成ATP。具体能量计算如下：</p>
+                <p>每分子乙酰辅酶A通过TCA循环的ATP生成：</p>
                 <ol>
-                    <li><strong>NADH生成</strong>：
+                    <li><strong>消耗</strong>：
+                        <ul>无直接消耗</ul>
+                    <li><strong>生成</strong>：
                         <ul>
-                            <li>异柠檬酸脱氢酶反应：生成1分子NADH。</li>
-                            <li>α-酮戊二酸脱氢酶复合体反应：生成1分子NADH。</li>
-                            <li>苹果酸脱氢酶反应：生成1分子NADH。</li>
-                        </ul>
-                        <p>因此，每一分子乙酰辅酶A通过TCA循环生成3分子NADH。</p>
-                    </li>
-                    <li><strong>FADH2生成</strong>：
-                        <ul>
-                            <li>琥珀酸脱氢酶反应：生成1分子FADH2。</li>
+                            3 NADH（7.5 ATP）+ 1 FADH₂（1.5 ATP）+1 GTP（1 ATP）
                         </ul>
                     </li>
-                    <li><strong>GTP生成</strong>：
-                        <ul>
-                            <li>琥珀酰辅酶A合成酶反应：生成1分子GTP（相当于1分子ATP）。</li>
-                        </ul>
-                    </li>
+                    <li><strong>总计</strong>：10 ATP</li>
                 </ol>
-                <p>ATP生成总结（每分子乙酰辅酶A）：</p>
-                <ul>
-                    <li>3分子NADH × 2.5分子ATP/NADH = 7.5分子ATP</li>
-                    <li>1分子FADH2 × 1.5分子ATP/FADH2 = 1.5分子ATP</li>
-                    <li>1分子GTP = 1分子ATP</li>
-                </ul>
-                <p>因此，每一分子乙酰辅酶A通过TCA循环总计生成 <strong>10分子ATP</strong>。</p>
 
                 <h4>意义</h4>
                 <p>TCA循环在细胞代谢中具有重要的生理意义：</p>
@@ -835,30 +802,6 @@
                     <li><strong>氧化还原平衡的维持</strong>：TCA循环通过生成NADH和FADH2，维持细胞内的氧化还原平衡。</li>
                     <li><strong>支持呼吸链功能</strong>：TCA循环生成的NADH和FADH2作为电子传递链的电子供体，驱动氧化磷酸化过程，生成ATP。</li>
                 </ol>
-
-                <h4>总结表格</h4>
-                <table>
-                    <tr>
-                        <th>TCA循环关键要素</th>
-                        <th>作用</th>
-                    </tr>
-                    <tr>
-                        <td>定义</td>
-                        <td>在线粒体中氧化乙酰辅酶A，生成高能分子和CO2，支持能量代谢。</td>
-                    </tr>
-                    <tr>
-                        <td>关键酶</td>
-                        <td>柠檬酸合酶、异柠檬酸脱氢酶、α-酮戊二酸脱氢酶复合体等。</td>
-                    </tr>
-                    <tr>
-                        <td>ATP生成</td>
-                        <td>每分子乙酰辅酶A通过TCA循环生成10分子ATP。</td>
-                    </tr>
-                    <tr>
-                        <td>意义</td>
-                        <td>能量生成、中间产物供应、连接其他代谢途径、维持氧化还原平衡。</td>
-                    </tr>
-                </table>
             `,
             "GS": `
                 <h1>GS</h1>
@@ -877,12 +820,12 @@
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
-                <p>糖原合成是一个耗能的过程，每加入一个葡萄糖分子到糖原中，需要消耗2个ATP。具体过程如下：</p>
+                <p>糖原合成过程中ATP的消耗：</p>
                 <ol>
-                    <li><strong>葡萄糖磷酸化</strong>：葡萄糖在己糖激酶或葡萄糖激酶的作用下磷酸化为葡萄糖-6-磷酸，消耗1个ATP。</li>
-                    <li><strong>UDP-葡萄糖的生成</strong>：葡萄糖-6-磷酸在磷酸葡萄糖变位酶的作用下转化为葡萄糖-1-磷酸，随后在尿苷二磷酸葡萄糖焦磷酸化酶的作用下生成UDP-葡萄糖，同时释放焦磷酸。焦磷酸的水解需要消耗相当于1个ATP的能量。</li>
+                    <li><strong>消耗</strong>：2 ATP/葡萄糖</li>
+                    <li><strong>生成</strong>：无</li>
+                    <li><strong>总计</strong>：-2 ATP</li>
                 </ol>
-                <p>因此，每加入1个葡萄糖分子到糖原中，总共需要消耗2个ATP。</p>
 
                 <h4>意义</h4>
                 <p>糖原合成具有重要的生理意义：</p>
@@ -912,13 +855,12 @@
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
-                <p>糖异生是一个耗能过程，因为它需要绕过糖酵解中几个高度放能的反应。以下是糖异生过程中消耗ATP的具体步骤：</p>
+                <p>从丙酮酸到葡萄糖的糖异生过程中ATP的消耗：</p>
                 <ol>
-                    <li><strong>丙酮酸转化为磷酸烯醇式丙酮酸（PEP）</strong>：丙酮酸首先通过丙酮酸羧化酶转化为草酰乙酸，消耗1分子ATP。草酰乙酸通过PEP羧激酶转化为PEP，消耗1分子GTP。</li>
-                    <li><strong>果糖-1,6-二磷酸转化为果糖-6-磷酸</strong>：该步骤由果糖-1,6-二磷酸酶催化，消耗1分子水，但不直接消耗ATP。</li>
-                    <li><strong>葡萄糖-6-磷酸转化为葡萄糖</strong>：该步骤由葡萄糖-6-磷酸酶催化，不直接消耗ATP。</li>
+                    <li><strong>消耗</strong>：6 ATP</li>
+                    <li><strong>生成</strong>：无</li>
+                    <li><strong>总计</strong>：-6 ATP</li>
                 </ol>
-                <p>因此，总的来说，从两分子丙酮酸生成一分子葡萄糖需要消耗6分子ATP。</p>
 
                 <h4>意义</h4>
                 <p>糖异生是维持血糖稳态的关键代谢途径，尤其在空腹、饥饿、长时间运动以及机体对碳水化合物需求增加的情况下。以下糖异生的主要生理意义：</p>
@@ -989,7 +931,7 @@
                 </ul>
 
                 <h3>3. 纤维素的酶促水解</h3>
-                <p>纤维素是植物细胞壁的主要成分，由β-1,4糖苷键连接的葡萄糖分子构成。纤维素的水解较为复杂，通常需要特定的酶��</p>
+                <p>纤维素是植物细胞壁的主要成分，由β-1,4糖苷键连接的葡萄糖分子构成。纤维素的水解较为复杂，通常需要特定的酶</p>
                 <ul>
                     <li><strong>纤维素酶（Cellulase）</strong>：纤维素酶能够水解纤维素的β-1,4糖苷键，将纤维素分解为葡萄糖或低聚糖。</li>
                 </ul>
