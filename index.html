@@ -18,7 +18,7 @@
 
         #graph {
             width: 100%;
-            height: 80%;
+            height: 85%;
             background-color: #1e1e1e;
             border-radius: 8px;
             padding: 20px;
@@ -64,6 +64,7 @@
             transition: width 0.3s ease;
             padding: 0;
             box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000; /* 确保信息面板在最上层 */
         }
 
         #info-panel.active {
@@ -77,6 +78,8 @@
             line-height: 1.6;
             opacity: 0;
             transition: opacity 0.3s ease;
+            padding-bottom: 40px; /* 增加底部内边距 */
+            margin-bottom: 20px; /* 增加底部外边距 */
         }
 
         #info-panel.active #info-panel-content {
@@ -126,7 +129,7 @@
 
         #control-panel {
             width: 100%;
-            height: 20%;
+            height: 15%;
             background-color: #2d2d2d;
             display: flex;
             justify-content: center;
@@ -183,6 +186,24 @@
 
         #info-panel h2, #info-panel h3, #info-panel h4 {
             color: #FFFFFF; /* 低级标题使用白色 */
+        }
+
+        /* 修改滚动条样式，使其更美观 */
+        #info-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #info-panel::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        #info-panel::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border-radius: 4px;
+        }
+
+        #info-panel::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 
@@ -674,9 +695,8 @@
             "EMP": `
                 <h1>EMP</h1>
                 <h3>糖酵解途径（Embden-Meyerhof-Parnas Pathway，EMP）</h3>
-
                 <h4>定义</h4>
-                <p>糖酵解途径（EMP）是指将一分子葡萄糖分解为两分子丙酮酸的过程，同时生成ATP和NADH。该过程在细胞质中进行，是葡萄糖有氧和无氧分解的共同起始途径。糖酵解是生物体获取能量的重要代谢途径之一，尤其在无氧条件下（如剧烈运动时）显得尤为重要。</p>
+                <p>糖酵解途径（EMP）是将一分子葡萄糖分解为两分子丙酮酸的过程，同时生成ATP和NADH。该过程在细胞质中进行，是葡萄糖有氧和无氧分解的共同起始途径。</p>
 
                 <h4>反应位置</h4>
                 <p>糖酵解途径发生在细胞质中。</p>
@@ -684,11 +704,9 @@
                 <h4>关键酶</h4>
                 <p>糖酵解过程中的关键酶包括：</p>
                 <ol>
-                    <li><strong>己糖激酶（Hexokinase）</strong>：催化葡萄糖磷酸化为葡萄糖-6-磷酸，消耗1个ATP。</li>
-                    <li><strong>磷酸果糖激酶-1（Phosphofructokinase-1，PFK-1）</strong>：催化果糖-6-磷酸磷酸化为果糖-1,6-二磷酸，消耗1个ATP。这是糖酵解途径中的限速步骤。</li>
-                    <li><strong>丙酮酸激酶（Pyruvate kinase）</strong>：催化磷酸烯醇式丙酮酸（PEP）转化为丙酮酸，同时生成1个ATP。</li>
-                    <li><strong>磷酸甘油酸激酶（Phosphoglycerate kinase）</strong>：催化1,3-二磷酸甘油酸转化为3-磷酸甘油酸，生成1个ATP。</li>
-                    <li><strong>甘油醛-3-磷酸脱氢酶（Glyceraldehyde-3-phosphate dehydrogenase）</strong>：催化甘油醛-3-磷酸氧化为1,3-二磷酸甘油酸，同时生成NADH。</li>
+                    <li><strong>己糖激酶（Hexokinase, HK）</strong>：该酶受产物葡萄糖-6-磷酸的反馈抑制，但并非主要限速步骤。</li>
+                    <li><strong>磷酸果糖激酶-1（Phosphofructokinase-1, PFK-1）</strong>：这是糖酵解的主要限速酶，PFK-1受到能量状态的强烈调控——ATP和柠檬酸抑制其活性，而ADP、AMP和果糖-2,6-二磷酸促进其活性。</li>
+                    <li><strong>丙酮酸激酶（Pyruvate Kinase, PK）</strong>：其活性受ATP抑制，而ADP、AMP等激活物会增强其活性。</li>
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
@@ -731,7 +749,7 @@
                 <h3>磷酸戊糖途径（Pentose Phosphate Pathway，PPP）</h3>
 
                 <h4>定义</h4>
-                <p>磷酸戊糖途径（PPP），也称为磷酸己糖旁路（Hexose Monophosphate Shunt），是一种在细胞质中进行的代谢途径。该途径的主要功能是生成核苷酸合成所需的核糖-5-磷酸和维持细胞内还原型谷胱甘肽的水平。PPP分为两个阶段：氧化阶段和非氧化阶段。氧化阶段生成NADPH，而非氧化阶段则涉及糖磷酸的相互转化以生成核糖-5-磷酸。</p>
+                <p>磷酸戊糖途径（PPP），是一种在细质中进行的代谢途径。该途径的主要功能是生成核苷酸合成所需的核糖-5-磷酸和维持细胞内还原型谷胱甘肽的水平。PPP分为两个阶段：氧化阶段和非氧化阶段。氧化阶段生成NADPH，而非氧化阶段则涉及糖磷酸的相互转化以生成核糖-5-磷酸。</p>
 
                 <h4>反应位置</h4>
                 <p>磷酸戊糖途径发生在细胞质中。</p>
@@ -739,10 +757,7 @@
                 <h4>关键酶</h4>
                 <p>磷酸戊糖途径中的关键酶包括：</p>
                 <ol>
-                    <li><strong>葡萄糖-6-磷酸脱氢酶（Glucose-6-phosphate dehydrogenase，G6PD）</strong>：催化葡萄糖-6-磷酸氧化为6-磷酸葡萄糖酸内酯，同时生成NADPH。这是PPP的限速步骤。</li>
-                    <li><strong>6-磷酸葡萄糖酸脱氢酶（6-phosphogluconate dehydrogenase）</strong>：催化6-磷酸葡萄糖酸进一步氧化为核酮糖-5-磷酸，同时生成NADPH。</li>
-                    <li><strong>转酮醇酶（Transketolase）</strong>：催化将酮糖上的二碳单位转移到醛糖上，如将木酮糖-5-磷酸和核糖-5-磷酸转化为景天庚酮糖-7-磷酸和甘油醛-3-磷酸。</li>
-                    <li><strong>转醛醇酶（Transaldolase）</strong>：催化将三碳单位从一个糖磷酸转移到另一个糖磷酸，如将景天庚酮糖-7-磷酸和甘油醛-3-磷酸转化为赤藓糖-4-磷酸和果糖-6-磷酸。</li>
+                    <li><strong>葡萄糖-6-磷酸脱氢酶（Glucose-6-phosphate Dehydrogenase, G6PD）</strong>：这是PPP的关键限速酶，其活性受到NADPH的反馈抑制，而NADP⁺的存在能激活其活性，促进该途径以生成还原力。</li>
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
@@ -768,22 +783,17 @@
                 <h3>三羧酸循环（TCA循环，Tricarboxylic Acid Cycle）</h3>
 
                 <h4>定义</h4>
-                <p>三羧酸循环（TCA循环），也称为柠檬酸循环（Citric Acid Cycle）或克雷布斯循环（Krebs Cycle），是发生在线粒体基质中的一系列酶促反应。该循环是需氧生物体中碳水化合物、脂肪和蛋白质代谢的共同最终途径，通过氧化乙酰辅酶A（Acetyl-CoA）生成高能分子（如NADH、FADH2）以及二氧化碳。TCA循环不仅是能量产生的核心环节，也是多种代谢中间产物的重要来源。</p>
+                <p>三羧酸循环（TCA循环），发生在线粒体基质中，TCA循环不仅是能量产生的核心环节，也是多种代谢中间产物的重要来源，通过氧化乙酰辅酶A（Acetyl-CoA）生成高能分子以及二氧化碳。</p>
 
                 <h4>反应位置</h4>
-                <p>三羧酸循环发生���线粒体基质中。</p>
+                <p>三羧酸循环发生线粒体基质中。</p>
 
                 <h4>关键酶</h4>
                 <p>TCA循环中的关键酶包括：</p>
                 <ol>
-                    <li><strong>柠檬酸合酶（Citrate synthase）</strong>：催化乙酰辅酶A与草酰乙酸（Oxaloacetate）缩合生成柠檬酸。</li>
-                    <li><strong>顺乌头酸酶（Aconitase）</strong>：催化柠檬酸异构化为异柠檬酸。</li>
-                    <li><strong>异柠檬酸脱氢酶（Isocitrate dehydrogenase）</strong>：催化异柠檬酸氧化脱羧生成α-酮戊二酸，同时生成NADH和释放CO2。</li>
-                    <li><strong>α-酮戊二酸脱氢酶复合体（α-Ketoglutarate dehydrogenase complex）</strong>：催化α-酮戊二酸氧化脱羧生成琥珀酰辅酶A，同时生成NADH和释放CO2。</li>
-                    <li><strong>琥珀酰辅酶A合成酶（Succinyl-CoA synthetase）</strong>：催化琥珀酰辅酶A转化为琥珀酸，同时生成GTP（GTP可进一步转化为ATP）。</li>
-                    <li><strong>琥珀酸脱氢酶（Succinate dehydrogenase）</strong>：催化琥珀酸氧化为延胡索酸，同时生成FADH2。</li>
-                    <li><strong>延胡索酸酶（Fumarase）</strong>：催化延胡索酸水合生成苹果酸。</li>
-                    <li><strong>苹果酸脱氢酶（Malate dehydrogenase）</strong>：催化苹果酸氧化为草酰乙酸，同时生成NADH。</li>
+                    <li><strong>柠檬酸合酶（Citrate synthase）</strong>：受ATP和NADH的反馈抑制。</li>
+                    <li><strong>异柠檬酸脱氢酶（Isocitrate dehydrogenase）</strong>：这是TCA循环的主要限速酶，被ADP激活，受NADH的反馈抑制。</li>
+                    <li><strong>α-酮戊二酸脱氢酶复合体（α-Ketoglutarate dehydrogenase complex）</strong>：其活性受NADH抑制，且受底物（α-酮戊二酸）浓度调控。</li>
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
@@ -820,7 +830,7 @@
                 <p>TCA循环在细胞代谢中具有重要的生理意义：</p>
                 <ol>
                     <li><strong>能量生产</strong>：TCA循环是需氧生物体中ATP生成的主要途径之一。通过氧化乙酰辅酶A生成NADH和FADH2，这些高能分子进入电子传递链，最终生成大量ATP。</li>
-                    <li><strong>中间代谢产物供应</strong>：TCA循环不仅是能量产生的核心环节，还提供了多种重要的代谢中间产物。这些中间产物可以作为生物合成的前体，用于氨基酸、核苷酸、葡萄糖等生物分子的合成。</li>
+                    <li><strong>中间谢产物供应</strong>：TCA循环不仅能量产生的核心环节，还提供了多种重要的代谢中间产物。这些中间产物可以作为生物合成的前体，用于氨基酸、核苷酸、葡萄糖等生物分子的合成。</li>
                     <li><strong>支持其他代谢途径</strong>：TCA循环与糖异生、脂肪酸氧化、氨基酸分解代谢等多个代谢途径密切相关。</li>
                     <li><strong>氧化还原平衡的维持</strong>：TCA循环通过生成NADH和FADH2，维持细胞内的氧化还原平衡。</li>
                     <li><strong>支持呼吸链功能</strong>：TCA循环生成的NADH和FADH2作为电子传递链的电子供体，驱动氧化磷酸化过程，生成ATP。</li>
@@ -863,11 +873,7 @@
                 <h4>关键酶</h4>
                 <p>糖原合成过程中的关键酶包括：</p>
                 <ol>
-                    <li><strong>己糖激酶（Hexokinase）</strong>或<strong>葡萄糖激酶（Glucokinase）</strong>：在肝脏中，葡萄糖激酶将葡萄糖磷酸化为葡萄糖-6-磷酸。</li>
-                    <li><strong>磷酸葡萄糖变位酶（Phosphoglucomutase）</strong>：将葡萄糖-6-磷酸转化为葡萄糖-1-磷酸。</li>
-                    <li><strong>尿苷二磷酸葡萄糖焦磷酸化酶（UDP-glucose pyrophosphorylase）</strong>：将葡萄糖-1-磷酸转化为UDP-葡萄糖，同时释放焦磷酸。</li>
-                    <li><strong>糖原合酶（Glycogen synthase）</strong>：这是糖原合成的关键酶，催化UDP-葡萄糖上的葡萄糖残基转移到糖原引物上，形成α-1,4-糖苷键，从而延长糖原链。</li>
-                    <li><strong>分支酶（Branching enzyme）</strong>：在糖原链达到一定长度后，分支酶将一部分直链转移形成α-1,6-糖苷键，从而形成分支结构。</li>
+                    <li><strong>糖原合酶（Glycogen Synthase）</strong>：糖原合酶为糖原合成的限速酶，受到磷酸化的抑制（受胰高血糖素信号调控）和去磷酸化的激活（受胰岛素信号调控），并且在葡萄糖-6-磷酸存在下活性进一步增强。</li>
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
@@ -876,7 +882,7 @@
                     <li><strong>葡萄糖磷酸化</strong>：葡萄糖在己糖激酶或葡萄糖激酶的作用下磷酸化为葡萄糖-6-磷酸，消耗1个ATP。</li>
                     <li><strong>UDP-葡萄糖的生成</strong>：葡萄糖-6-磷酸在磷酸葡萄糖变位酶的作用下转化为葡萄糖-1-磷酸，随后在尿苷二磷酸葡萄糖焦磷酸化酶的作用下生成UDP-葡萄糖，同时释放焦磷酸。焦磷酸的水解需要消耗相当于1个ATP的能量。</li>
                 </ol>
-                <p>因此，每加入一个葡萄糖分子到糖原中，总共需要消耗2个ATP。</p>
+                <p>因此，每加入1个葡萄糖分子到糖原中，总共需要消耗2个ATP。</p>
 
                 <h4>意义</h4>
                 <p>糖原合成具有重要的生理意义：</p>
@@ -892,7 +898,7 @@
                 <h3>糖异生（Gluconeogenesis, GNG）</h3>
 
                 <h4>定义</h4>
-                <p>糖异生（GNG）是生物体内由非碳水化合物底物（如乳酸、甘油和氨基酸）生成葡萄糖的过程。该过程主要在肝脏和肾脏中进行，对于维持血糖水平的稳定至关重要，特别是在饥饿或剧烈运动时。</p>
+                <p>糖异生（GNG）是生物体内由非碳水化合物底物（如乳酸、甘油和氨基酸）生成葡萄糖的过程。该过程主要在肝脏和肾脏中进行，对于维持血糖水平的稳定至关重要。</p>
 
                 <h4>反应位置</h4>
                 <p>糖异生主要发生在肝脏和肾脏的细胞质和线粒体中。</p>
@@ -900,10 +906,9 @@
                 <h4>关键酶</h4>
                 <p>糖异生途径中，有几个关键的酶是糖酵解途径中没有的，或者说是为了绕过糖酵解中的不可逆步骤而存在的。以下是糖异生的关键酶：</p>
                 <ol>
-                    <li><strong>丙酮酸羧化酶（Pyruvate Carboxylase）</strong>：催化丙酮酸转化为草酰乙酸，这是糖异生的第一步。该反应需要ATP和二氧化碳（CO2）。</li>
-                    <li><strong>磷酸烯醇式丙酮酸羧激酶（PEP Carboxykinase, PEPCK）</strong>：催化草酰乙酸转化为磷酸烯醇式丙酮酸（PEP）。此反应需要GTP。</li>
-                    <li><strong>果糖-1,6-二磷酸酶（Fructose-1,6-Bisphosphatase, FBPase）</strong>：催化果糖-1,6-二磷酸脱磷酸生成果糖-6-磷酸，绕过糖酵解中磷酸果糖激酶（PFK-1）催化的不可逆步骤。</li>
-                    <li><strong>葡萄糖-6-磷酸酶（Glucose-6-Phosphatase, G6Pase）</strong>：催化葡萄糖-6-磷酸脱磷酸生成葡萄糖，完成糖异生的最后一步。</li>
+                    <li><strong>丙酮酸羧化酶（Pyruvate Carboxylase, PC）</strong>：PC的活性受到ADP的抑制，而乙酰辅酶A则显著激活PC，增强糖异生途径起始阶段的活性。</li>
+                    <li><strong>磷酸烯醇式丙酮酸羧激酶（PEPCK）</strong>：PEPCK在糖异生中也是限速酶，其活性受ADP抑制，而高浓度的葡萄糖-6-磷酸则有助于增强其活性，推进糖异生过程。</li>
+                    <li><strong>果糖-1,6-二磷酸酶（Fructose-1,6-bisphosphatase, FBPase-1）</strong>：FBPase-1受到果糖-2,6-二磷酸和AMP的抑制，而柠檬酸则会激活其活性，是糖异生中一个重要的调控点。</li>
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
@@ -916,7 +921,7 @@
                 <p>因此，总的来说，从两分子丙酮酸生成一分子葡萄糖需要消耗6分子ATP。</p>
 
                 <h4>意义</h4>
-                <p>糖异生是维持血糖稳态的关键代谢途径，尤其在空腹、饥饿、长时间运动以及机体对碳水化合物需求增加的情况下。以下是糖异生的主要生理意义：</p>
+                <p>糖异生是维持血糖稳态的关键代谢途径，尤其在空腹、饥饿、长时间运动以及机体对碳水化合物需求增加的情况下。以下糖异生的主要生理意义：</p>
                 <ol>
                     <li><strong>维持血糖水平稳定</strong>：糖异生在维持血糖稳态中起着至关重要的作用，特别是在空腹或饥饿状态下。</li>
                     <li><strong>在糖酵解和糖异生之间实现代谢平衡</strong>：糖酵解和糖异生是两个相反的代谢途径，但它们在机体内是协调进行的。</li>
@@ -978,13 +983,13 @@
                 <h3>2. 糖原的酶促水解</h3>
                 <p>糖原是动物储存的多糖，主要存在于肝脏和肌肉中，其水解过程帮助细胞迅速获取葡萄糖作为能量来源。</p>
                 <ul>
-                    <li><strong>糖原磷酸化酶（Glycogen Phosphorylase）</strong>：糖原磷酸化酶将糖原的α-1,4糖苷键水解，生成葡萄糖-1-磷酸。</li>
+                    <li><strong>糖原磷酸化酶（Glycogen Phosphorylase）</strong>：糖原磷酸化酶将糖原的α-1,4糖苷键水，生成葡萄糖-1-磷酸。</li>
                     <li><strong>糖原变位酶（Glycogen Debranching Enzyme）</strong>：当糖原链上的分支点处发生支链时，糖原变位酶会将支链的α-1,6糖苷键水解，生成葡萄糖。</li>
                     <li><strong>葡萄糖-6-磷酸酶（Glucose-6-Phosphatase）</strong>：在肝脏中，葡萄糖-6-磷酸酶将葡萄糖-6-磷酸水解为葡萄糖，并释放到血液中，供机体利用。</li>
                 </ul>
 
                 <h3>3. 纤维素的酶促水解</h3>
-                <p>纤维素是植物细胞壁的主要成分，由β-1,4糖苷键连接的葡萄糖分子构成。纤维素的水解较为复杂，通常需要特定的酶。</p>
+                <p>纤维素是植物细胞壁的主要成分，由β-1,4糖苷键连接的葡萄糖分子构成。纤维素的水解较为复杂，通常需要特定的酶��</p>
                 <ul>
                     <li><strong>纤维素酶（Cellulase）</strong>：纤维素酶能够水解纤维素的β-1,4糖苷键，将纤维素分解为葡萄糖或低聚糖。</li>
                 </ul>
