@@ -27,3 +27,5 @@
 
 2. **打开 `index.html`**：
     - 直接在浏览器中打开 `index.html` 文件，即可访问代谢路径图。
+
+![样例-TCA循环](https://i1.hdslb.com/bfs/new_dyn/287214dec35261b3d4207195bb11df85382533200.png@720w_368h_1e_1c.avif "样例-TCA循环")
