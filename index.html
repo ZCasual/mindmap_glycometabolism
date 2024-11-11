@@ -734,11 +734,11 @@
             .style("fill", "#FFFFFF")
             .text(d => {
                 if (d.source === "Isocitrate" && d.target === "Glyoxylate") {
-                    return "[异柠檬酸裂解酶, FAD -> FADH₂]";
+                    return "[异柠檬酸裂解酶, 琥珀酸]";
                 } else if (d.source === "Glyoxylate" && d.target === "Malate") {
-                    return "[苹果酸合酶]";
+                    return "[苹果酸合酶, H₂O]";
                 } else if (d.source === "OAA" && d.target === "PEP_GC") {
-                    return "[磷酸烯醇式丙酮酸羧激酶, GDP -> GTP, CO₂]";
+                    return "[磷酸烯醇式丙酮酸羧激酶]";
                 }
                 return "";
             });
@@ -1035,7 +1035,7 @@
                 <h3>糖原合成（Glycogen Synthesis，GS）</h3>
 
                 <h4>定义</h4>
-                <p>糖原合成是指将葡萄糖分子聚合形成糖原的过程。糖原是一种多分支的多糖，是动物和细菌中葡萄糖的储存形式。在人体中，糖原主要储存在肝脏和肌肉中，作为能量储备，以备需要时快速动员提供能量。</p>
+                <p>糖原合成是将葡萄糖分子聚合成糖原的过程。糖原是一种多分支多糖，主要储存在肝脏和肌肉中作为能量储备。合成过程需要糖原蛋白作为引物。</p>
 
                 <h4>反应位置</h4>
                 <p>糖原合成主要发生在肝脏和肌肉细胞的细胞质中。</p>
@@ -1043,7 +1043,7 @@
                 <h4>关键酶</h4>
                 <p>糖原合成过程中的关键酶包括：</p>
                 <ol>
-                    <li><strong>糖原合酶（Glycogen Synthase）</strong>：糖原合酶为糖原合成的限速酶，受到磷酸化的抑制（受胰高血糖素信号调控）和去磷酸化的激活（受胰岛素信号调控），并且在葡萄糖-6-磷酸存在下活性进一步增强。</li>
+                    <li><strong>糖原合酶（Glycogen Synthase）</strong>：糖原合酶为糖原合成的限速酶，受到磷酸化的抑制（受胰高血糖素信号调控）和去磷酸化的激活（受胰岛素信号调控），并且在葡萄糖-6-磷酸存在下活性进一步增强。需要注意的是，糖原合酶只能在已有的引物（至少4个葡萄糖残基）上延长糖链。</li>
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
@@ -1183,18 +1183,16 @@
                 <h4>关键酶</h4>
                 <p>乙醛酸循环中的关键酶包括：</p>
                 <ol>
-                    <li><strong>异柠檬酸裂解酶（Isocitrate lyase）</strong>：催化异柠檬酸裂解为琥珀酸和乙醛酸，是乙醛酸循环的特征性酶之一。</li>
-                    <li><strong>苹果酸合酶（Malate synthase）</strong>：催化乙醛酸和乙酰辅酶A缩合形成苹果酸，是另一个特征性酶。</li>
-                    <li><strong>苹果酸脱氢酶（Malate dehydrogenase）</strong>：催化苹果酸氧化为草酰乙酸，同时生成NADH。</li>
-                    <li><strong>磷酸烯醇式丙酮酸羧激酶（PEP carboxykinase）</strong>：催化草酰乙酸转化为磷酸烯醇式丙酮酸。</li>
+                    <li><strong>异柠檬酸裂解酶（Isocitrate lyase，ICL）</strong>：作为乙醛酸循环的主要限速酶，催化异柠檬酸裂解为琥珀酸和乙醛酸。这是乙醛酸循环的独特反应和重要调控位点。</li>
+                    <li><strong>苹果酸合成酶（Malate synthase）</strong>：催化乙醛酸和乙酰辅酶A合成苹果酸。</li>
                 </ol>
 
                 <h4>总能量（ATP）计算过程</h4>
                 <p>乙醛酸循环中ATP的生成和消耗：</p>
                 <ol>
-                    <li><strong>消耗</strong>：每转化2个乙酰CoA需消耗1个ATP</li>
-                    <li><strong>生成</strong>：每循环产生1个NADH（2.5 ATP）</li>
-                    <li><strong>总计</strong>：每完整循环净生成1.5 ATP</li>
+                    <li><strong>消耗</strong>：无直接消耗</li>
+                    <li><strong>生成</strong>：2 NADH（5 ATP）+ 1 FADH₂（1.5 ATP）</li>
+                    <li><strong>总计</strong>：6.5 ATP</li>
                 </ol>
 
                 <h4>意义</h4>
@@ -1278,9 +1276,9 @@
                         const enzymeText = labelSelection.filter(l => l === d).text();
                         // 检查是否为 GC 相关的特定酶标签
                         if (enzymeText === '[苹果酸脱氢酶, NAD⁺ -> NADH]' ||
-                            enzymeText === '[异柠檬酸裂解酶, FAD -> FADH₂]' ||
+                            enzymeText === '[异柠檬酸裂解酶, 琥珀酸]' ||
                             enzymeText === '[苹果酸合酶]' ||
-                            enzymeText === '[磷酸烯醇式丙酮酸羧激酶, GDP -> GTP, CO₂]') {
+                            enzymeText === '[磷酸烯醇式丙酮酸羧激酶]') {
                             return 1; // 保持完全不透明
                         }
                         
