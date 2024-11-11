@@ -395,7 +395,9 @@
                 { id: "TCA", label: "TCA", group: "TCA" },
                 { id: "GS", label: "GS", group: "GS" },
                 { id: "GNG", label: "GNG", group: "GNG" },
+                { id: "GC", label: "GC", group: "GC" },
                 { id: "DOG", label: "🥵", group: "DOG" },
+
 
                 // EMP 途径节点
                 { id: "Glucose", label: "葡萄糖", group: "EMP" },
@@ -449,19 +451,14 @@
                 { id: "BranchedGlycogen", label: "分支糖原", group: "GS" },
                 { id: "Glycogen", label: "糖原", group: "GS" },
 
-                // 在 data.nodes 数组中添加以下节点
-                { id: "GC", label: "GC", group: "GC" },  // 主节点
-                { id: "Isocitrate_GC", label: "异柠檬酸", group: "GC" },
-                { id: "Succinate_GC", label: "琥珀酸", group: "GC" },
+                // GC
                 { id: "Glyoxylate", label: "乙醛酸", group: "GC" },
-                { id: "Malate_GC", label: "苹果酸", group: "GC" },
-                { id: "OAA_GC", label: "草酰乙酸", group: "GC" },
                 { id: "PEP_GC", label: "磷酸烯醇式丙酮酸", group: "GC" },
-                { id: "AcetylCoA_GC", label: "乙酰辅酶A", group: "GC" }
             ],
             links: [
                 { source: "DOG", target: "EMP", double: true },  // 狗链
                 { source: "DOG", target: "Glucose", double: true },  // 狗链
+                { source: "GC", target: "TCA", double: true },  // 狗链
                 { source: "GS", target: "EMP", double: true },
                 { source: "EMP", target: "TCA", double: false },
                 { source: "PPP", target: "EMP", double: true },
@@ -514,14 +511,18 @@
                 { source: "UDPGlucose", target: "LinearGlycogen", double: false },
                 { source: "LinearGlycogen", target: "BranchedGlycogen", double: false },
                 { source: "BranchedGlycogen", target: "Glycogen", double: false },
+                // GC
+                { source: "BranchedGlycogen", target: "Glycogen", double: false },
 
                 // 在 data.links 数组中添加以下连接
-                { source: "Isocitrate_GC", target: "Succinate_GC", double: false },
-                { source: "Isocitrate_GC", target: "Glyoxylate", double: false },
-                { source: "Glyoxylate", target: "Malate_GC", double: false },
-                { source: "AcetylCoA_GC", target: "Malate_GC", double: false },
-                { source: "Malate_GC", target: "OAA_GC", double: false },
-                { source: "OAA_GC", target: "PEP_GC", double: false }
+                { source: "OAA", target: "PEP_GC", double: false },
+                { source: "Isocitrate", target: "Glyoxylate", double: false },
+                { source: "Glyoxylate", target: "Malate", double: false },
+                // { source: "Isocitrate_GC", target: "Glyoxylate", double: false },
+                // { source: "Glyoxylate", target: "Malate_GC", double: false },
+                // { source: "AcetylCoA_GC", target: "Malate_GC", double: false },
+                // { source: "Malate_GC", target: "OAA_GC", double: false },
+                // { source: "OAA_GC", target: "PEP_GC", double: false }
             ]
         };
 
