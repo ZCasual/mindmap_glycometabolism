@@ -26,6 +26,10 @@
     ```
 
 2. **打开 `index.html`**：
-    - 直接在浏览器中打开 `index.html` 文件，即可访问代谢路径图。
+直接在浏览器中打开 `index.html` 文件，即可访问代谢路径图。
+
+3. **打开 `index.html`**：
+点击下方按钮聚焦对应板块知识，点击思维导图中的中文节点可以恢复全局视野（英文节点为主节点，效果视同按钮）。
 
 ![样例-TCA循环](https://gitee.com/casual_pleat/mindmap_glycometabolism/raw/master/test.png "样例-TCA循环")
+
